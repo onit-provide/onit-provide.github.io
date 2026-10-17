@@ -81,7 +81,7 @@
           "<div>" +
             '<div class="footer-title">Contatti</div>' +
             '<ul class="footer-links">' +
-              '<li><a href="tel:' + C.telefonoLink + '">' + esc(C.telefono) + "</a></li>" +
+              (C.telefono ? '<li><a href="tel:' + C.telefonoLink + '">' + esc(C.telefono) + "</a></li>" : "") +
               '<li><a href="mailto:' + C.email + '">' + esc(C.email) + "</a></li>" +
               "<li>" + esc(C.sede) + "</li>" +
             "</ul>" +
@@ -98,6 +98,11 @@
   document.body.appendChild(footer);
   if (page !== "home") {
     document.body.appendChild(el('<a class="btn fab" href="' + bookHref + '">Prenota un incontro</a>'));
+  }
+
+  /* Senza numero di telefono, rimuove gli elementi che lo riguardano */
+  if (!C.telefono) {
+    document.querySelectorAll("[data-requires-phone]").forEach(function (n) { n.remove(); });
   }
 
   /* Riempie i recapiti nelle pagine (elementi con data-contact) */
@@ -331,7 +336,7 @@
           // Se l'invio automatico non riesce, apre il programma di posta con i dati già compilati
           var body = Object.keys(payload).filter(function (k) { return k.charAt(0) !== "_"; })
             .map(function (k) { return k + ": " + payload[k]; }).join("\n");
-          showStatus("Non è stato possibile inviare la richiesta automaticamente. Si aprirà la tua email con i dati già compilati: in alternativa chiamaci al " + C.telefono + ".", true);
+          showStatus("Non è stato possibile inviare la richiesta automaticamente. Si aprirà la tua email con i dati già compilati" + (C.telefono ? ": in alternativa chiamaci al " + C.telefono : "") + ".", true);
           location.href = "mailto:" + C.email + "?subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(body);
         })
         .then(function () { btn.disabled = false; label.textContent = old; });
