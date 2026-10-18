@@ -27,6 +27,30 @@ window.ONIT = {
      -------------------------------------------------------------------- */
   news: [
     {
+      data: "2026-10-18",
+      categoria: "nuova-sezione",
+      titolo: "Privacy, cookie e termini di servizio",
+      testo: "Abbiamo pubblicato le pagine dedicate alla privacy policy, alla cookie policy e ai termini e condizioni, raggiungibili dal fondo di ogni pagina. Al primo accesso un banner ti permette di scegliere quali cookie attivare.",
+      punti: [
+        "Nuova pagina Privacy e cookie policy",
+        "Nuova pagina Termini e condizioni",
+        "Banner per il consenso ai cookie, modificabile in ogni momento"
+      ]
+    },
+    {
+      data: "2026-10-18",
+      categoria: "aggiornamento",
+      titolo: "Sito più veloce, sicuro e accessibile",
+      testo: "Abbiamo migliorato le prestazioni e la leggibilità del sito su ogni dispositivo.",
+      punti: [
+        "Caratteri e immagini più leggeri, caricati direttamente dal nostro sito",
+        "Connessione sicura HTTPS sempre attiva",
+        "Contrasto dei colori migliorato e pulsanti più comodi su smartphone",
+        "Anteprima curata quando condividi il sito sui social",
+        "Nuova pagina di errore 404"
+      ]
+    },
+    {
       data: "2026-10-17",
       categoria: "lancio",
       titolo: "Online il nuovo sito ON.IT",

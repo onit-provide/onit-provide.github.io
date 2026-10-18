@@ -51,6 +51,7 @@
         '<div class="header-tools">' +
           '<div class="lang notranslate" title="Traduci il sito">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>' +
+            '<button type="button" class="lang-btn" id="langBtn">Lingua</button>' +
             '<div id="google_translate_element"></div>' +
           "</div>" +
           '<a class="btn btn--sm" href="' + bookHref + '">Prenota</a>' +
@@ -64,7 +65,7 @@
   var footer = el(
     '<footer class="site-footer">' +
       '<div class="container">' +
-        '<div class="footer-grid">' +
+        '<div class="footer-grid footer-grid--4">' +
           "<div>" +
             '<img class="footer-logo" src="assets/img/logo-white.png" alt="ON.IT" width="586" height="170">' +
             "<p>Realizziamo siti web su misura per le attività che vogliono farsi trovare, farsi scegliere e crescere online.</p>" +
@@ -86,6 +87,15 @@
               "<li>" + esc(C.sede) + "</li>" +
             "</ul>" +
           "</div>" +
+          "<div>" +
+            '<div class="footer-title">Informazioni legali</div>' +
+            '<ul class="footer-links">' +
+              '<li><a href="privacy.html">Privacy policy</a></li>' +
+              '<li><a href="privacy.html#cookie">Cookie policy</a></li>' +
+              '<li><a href="termini.html">Termini e condizioni</a></li>' +
+              '<li><button type="button" class="link-btn" data-cookie-open>Preferenze cookie</button></li>' +
+            "</ul>" +
+          "</div>" +
         "</div>" +
         '<div class="footer-bottom"><span>© ' + year + " ON.IT — Tutti i diritti riservati</span><span>Siti web su misura</span></div>" +
       "</div>" +
@@ -94,10 +104,15 @@
 
   document.body.insertBefore(header, document.body.firstChild);
   document.body.insertBefore(el('<div class="progress" id="progress" aria-hidden="true"></div>'), document.body.firstChild);
-  document.body.insertBefore(el('<div class="page-curtain" aria-hidden="true"><img src="assets/img/logo-black.png" alt=""></div>'), document.body.firstChild);
+  // Il sipario compare solo passando da una pagina all'altra: alla prima visita il contenuto è subito visibile
+  var fromInternal = false;
+  try { fromInternal = sessionStorage.getItem("onit-nav") === "1"; sessionStorage.removeItem("onit-nav"); } catch (e) {}
+  var curtain = el('<div class="page-curtain' + (fromInternal ? "" : " is-skipped") + '" aria-hidden="true"><img src="assets/img/logo-black.png" alt="" width="586" height="170"></div>');
+  document.body.insertBefore(curtain, document.body.firstChild);
   document.body.appendChild(footer);
   if (page !== "home") {
     document.body.appendChild(el('<a class="btn fab" href="' + bookHref + '">Prenota un incontro</a>'));
+    document.body.classList.add("has-fab");
   }
 
   /* Senza numero di telefono, rimuove gli elementi che lo riguardano */
@@ -168,6 +183,8 @@
     if (url.origin !== location.origin) return;
     if (url.pathname === location.pathname && url.hash) return;
     e.preventDefault();
+    try { sessionStorage.setItem("onit-nav", "1"); } catch (err) {}
+    curtain.classList.remove("is-skipped");
     document.body.classList.add("is-leaving");
     setTimeout(function () { location.href = url.href; }, 520);
   });
@@ -211,17 +228,117 @@
     }, 200);
   };
   function resetTranslation() {
+    clearTranslateCookies();
+    location.reload();
+  }
+  // Google Traduttore è un servizio di terze parti: si carica solo dopo il consenso ai cookie funzionali
+  var langBtn = document.getElementById("langBtn");
+  var translateLoaded = false;
+  function loadTranslate() {
+    if (translateLoaded) return;
+    translateLoaded = true;
+    langBtn.hidden = true;
+    var gt = document.createElement("script");
+    gt.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    gt.async = true;
+    document.body.appendChild(gt);
+  }
+  function clearTranslateCookies() {
     var host = location.hostname;
     var exp = "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
     document.cookie = "googtrans" + exp;
     document.cookie = "googtrans" + exp + "; domain=" + host;
     document.cookie = "googtrans" + exp + "; domain=." + host;
-    location.reload();
   }
-  var gt = document.createElement("script");
-  gt.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  gt.async = true;
-  document.body.appendChild(gt);
+
+  /* ------------------------------------------------------------------------
+     Consenso cookie
+     Necessari: sempre attivi (solo la memorizzazione della scelta, nel browser).
+     Funzionali: traduzione automatica tramite Google Traduttore.
+     ------------------------------------------------------------------------ */
+  var CONSENT_KEY = "onit-consenso-cookie";
+  var CONSENT_VERSION = 1;
+
+  function readConsent() {
+    try {
+      var c = JSON.parse(localStorage.getItem(CONSENT_KEY));
+      return c && c.v === CONSENT_VERSION ? c : null;
+    } catch (e) { return null; }
+  }
+
+  var banner = el(
+    '<div class="cookie" id="cookieBanner" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieText" hidden>' +
+      '<div class="container cookie-inner">' +
+        '<div class="cookie-copy">' +
+          '<strong class="cookie-title" id="cookieTitle">La tua privacy</strong>' +
+          '<p id="cookieText">Usiamo solo cookie tecnici. Con il tuo consenso attiviamo anche la traduzione automatica di Google, che usa cookie di terze parti. Puoi cambiare scelta in ogni momento. <a href="privacy.html#cookie">Cookie policy</a></p>' +
+          '<div class="cookie-prefs" id="cookiePrefs" hidden>' +
+            '<label class="check"><input type="checkbox" checked disabled> <span><strong>Necessari</strong> — sempre attivi. Memorizzano la tua scelta sui cookie.</span></label>' +
+            '<label class="check"><input type="checkbox" id="cookieFunc"> <span><strong>Funzionali</strong> — traduzione del sito in altre lingue (Google Traduttore).</span></label>' +
+          "</div>" +
+        "</div>" +
+        '<div class="cookie-actions">' +
+          '<button type="button" class="btn btn--sm" data-cookie="reject">Rifiuta</button>' +
+          '<button type="button" class="btn btn--sm" data-cookie="accept">Accetta tutti</button>' +
+          '<button type="button" class="btn btn--sm btn--ghost" data-cookie="custom">Personalizza</button>' +
+        "</div>" +
+        '<button type="button" class="cookie-close" data-cookie="reject" aria-label="Chiudi e rifiuta i cookie non necessari">×</button>' +
+      "</div>" +
+    "</div>"
+  );
+  document.body.appendChild(banner);
+  var prefs = document.getElementById("cookiePrefs");
+  var funcBox = document.getElementById("cookieFunc");
+  var customBtn = banner.querySelector('[data-cookie="custom"]');
+
+  function openBanner(showPrefs) {
+    var c = readConsent();
+    funcBox.checked = !!(c && c.funzionali);
+    prefs.hidden = !showPrefs;
+    customBtn.textContent = showPrefs ? "Salva scelte" : "Personalizza";
+    banner.hidden = false;
+    document.body.classList.add("cookie-open");
+  }
+  function closeBanner() {
+    banner.hidden = true;
+    document.body.classList.remove("cookie-open");
+  }
+  function saveConsent(funzionali) {
+    var before = readConsent();
+    try {
+      localStorage.setItem(CONSENT_KEY, JSON.stringify({ v: CONSENT_VERSION, funzionali: funzionali, data: new Date().toISOString() }));
+    } catch (e) { /* archiviazione non disponibile: la scelta vale solo per questa pagina */ }
+    closeBanner();
+    if (funzionali) loadTranslate();
+    else if (translateLoaded || (before && before.funzionali)) {
+      // Consenso revocato: rimuove i cookie della traduzione e ricarica la pagina in italiano
+      clearTranslateCookies();
+      location.reload();
+    }
+  }
+
+  banner.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-cookie]");
+    if (!b) return;
+    var a = b.getAttribute("data-cookie");
+    if (a === "accept") saveConsent(true);
+    else if (a === "reject") saveConsent(false);
+    else if (a === "custom") {
+      if (prefs.hidden) { prefs.hidden = false; customBtn.textContent = "Salva scelte"; funcBox.focus(); }
+      else saveConsent(funcBox.checked);
+    }
+  });
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("[data-cookie-open]")) openBanner(true);
+  });
+  langBtn.addEventListener("click", function () {
+    openBanner(true);
+    funcBox.checked = true;
+  });
+
+  var consent = readConsent();
+  if (!consent) openBanner(false);
+  else if (consent.funzionali) loadTranslate();
 
   /* ------------------------------------------------------------------------
      Modulo di prenotazione
