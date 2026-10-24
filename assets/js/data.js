@@ -112,23 +112,13 @@ window.ONIT = {
   ],
 
   /* --------------------------------------------------------------------
-     RECENSIONI — una per oggetto. "piano" deve corrispondere a un id dei piani.
-     ATTENZIONE: le recensioni con esempio: true sono SEGNAPOSTO dimostrativi.
-     Sostituiscile con recensioni reali dei tuoi clienti prima della pubblicazione
-     (oppure eliminale): finché ce ne sono, la pagina mostra un avviso.
+     RECENSIONI — solo recensioni reali dei clienti, una per oggetto.
+     Finché la lista è vuota la pagina Recensioni mostra "Qui ci sarà la tua recensione";
+     con la prima recensione quella schermata sparisce da sola.
+     "piano" deve essere "start", "business" o "premium". Esempio di formato:
+     { nome: "Mario Rossi", attivita: "Ristorante Da Mario", piano: "business", voto: 5, data: "2026-11-15",
+       testo: "Il testo della recensione, come scritto dal cliente." }
      -------------------------------------------------------------------- */
   recensioni: [
-    { esempio: true, nome: "Nome Cliente", attivita: "Ristorante", piano: "start", voto: 5, data: "2026-10-01",
-      testo: "Esempio di recensione: sito vetrina pronto in tempi brevi, chiaro e facile da aggiornare." },
-    { esempio: true, nome: "Nome Cliente", attivita: "Parrucchiere", piano: "start", voto: 4, data: "2026-09-20",
-      testo: "Esempio di recensione: ottimo rapporto qualità-prezzo per chi vuole essere trovato online." },
-    { esempio: true, nome: "Nome Cliente", attivita: "Studio professionale", piano: "business", voto: 5, data: "2026-09-12",
-      testo: "Esempio di recensione: ci hanno seguito in ogni fase, dall'incontro iniziale alla pubblicazione." },
-    { esempio: true, nome: "Nome Cliente", attivita: "Negozio di abbigliamento", piano: "business", voto: 5, data: "2026-08-30",
-      testo: "Esempio di recensione: il modulo di contatto ci porta nuove richieste ogni settimana." },
-    { esempio: true, nome: "Nome Cliente", attivita: "Agenzia", piano: "premium", voto: 5, data: "2026-08-15",
-      testo: "Esempio di recensione: progetto su misura con funzioni avanzate, assistenza sempre disponibile." },
-    { esempio: true, nome: "Nome Cliente", attivita: "Palestra", piano: "premium", voto: 4, data: "2026-07-28",
-      testo: "Esempio di recensione: design professionale e prenotazioni online integrate." }
   ]
 };

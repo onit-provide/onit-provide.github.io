@@ -23,7 +23,7 @@ Quasi tutto si aggiorna da **`assets/js/data.js`**:
 - **Recapiti**: telefono, email, email dell'assistenza e sede (vengono mostrati in tutte le pagine).
 - **News**: aggiungi un nuovo oggetto in cima alla lista `news` a ogni modifica del sito.
 - **Recensioni**: aggiungi un oggetto a `recensioni` con `piano` uguale a `start`, `business` o `premium`.
-  Le recensioni con `esempio: true` sono segnaposto: sostituiscile con recensioni reali (o eliminale) prima della pubblicazione.
+  Finché non ci sono recensioni, la pagina mostra la schermata "Qui ci sarà la tua recensione", che sparisce da sola con la prima.
 
 Header e footer sono generati da `assets/js/main.js`, lo stile è in `assets/css/style.css`.
 
@@ -83,8 +83,8 @@ quindi senza consenso il sito non contatta nessun servizio esterno.
 
 ## Prima della pubblicazione
 
-- **Testi legali**: in `privacy.html` e `termini.html` completa i campi evidenziati `[...]` (ragione sociale, sede, P. IVA,
-  hosting, foro). I testi sono un modello: falli verificare da un consulente legale.
+- **Testi legali**: `privacy.html` e `termini.html` sono un modello: falli verificare da un consulente legale e, quando
+  disponibili, aggiungi ragione sociale, sede e partita IVA.
 - **Indirizzo del sito**: i tag per l'anteprima social, `sitemap.xml` e `robots.txt` usano
   `https://onitweb.eu/`. Se cambi dominio, sostituisci questo indirizzo in tutti i file.
 - **HTTPS**: ogni pagina reindirizza automaticamente a HTTPS. Sull'hosting attiva anche il certificato:

@@ -596,9 +596,9 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 }
 .review-author strong { display: block; font-family: var(--font-display); font-weight: 800; }
 .review-author div span { color: #595959; font-size: .88rem; }
-.sample-note {
-  border: 1.5px dashed #999; padding: 14px 18px; margin-bottom: 36px; color: #444; font-size: .92rem;
-}
+.first-review { max-width: 920px; padding: 8px 0 32px; }
+.first-review-title { font-size: clamp(2.4rem, 7vw, 5.4rem); margin: 18px 0 26px; }
+.first-review .hero-actions { margin-top: 34px; }
 
 /* CTA finale */
 .cta-band { text-align: left; }
@@ -744,7 +744,6 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .legal ul, .legal ol { padding-left: 22px; }
 .legal a { text-decoration: underline; text-underline-offset: 3px; }
 .legal .meta { color: #4a4a4a; font-size: .95rem; }
-.todo { background: #000; color: #fff; padding: 1px 6px; font-weight: 600; font-size: .92em; }
 .table-wrap { overflow-x: auto; margin: 16px 0; border: 1px solid #cfcfcf; }
 .legal table { width: 100%; border-collapse: collapse; font-size: .93rem; min-width: 560px; }
 .legal th, .legal td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #e0e0e0; vertical-align: top; }
