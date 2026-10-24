@@ -52,6 +52,20 @@ Le regole in `firestore.rules` fanno sì che ogni cliente legga solo i propri da
 Prove in locale con gli emulatori: `npx firebase-tools emulators:start --project demo-onit`,
 poi apri `http://localhost:8000/accedi.html?emulatori`.
 
+### Invio email dal Pannello admin (Gmail)
+
+La scheda **Email** del pannello admin compone email con il modello grafico ON.IT (`assets/js/email-template.js`),
+mostra l'anteprima e le invia dalla Gmail dell'admin tramite l'API di Gmail (`assets/js/gmail.js`).
+Senza configurazione restano disponibili anteprima, "Copia per Gmail" e "Scarica HTML". Per attivare l'invio:
+
+1. https://console.cloud.google.com → progetto `onit-area-clienti` → **API e servizi → Libreria** → abilita **Gmail API**.
+2. **Google Auth Platform** (schermata consenso OAuth): app esterna in modalità *Test*, aggiungi
+   `onitproviderbusiness@gmail.com` come utente di test e lo scope `https://www.googleapis.com/auth/gmail.send`.
+3. **Client** → Crea client → *Applicazione web* → origine JavaScript autorizzata `https://onit-provide.github.io`.
+4. Copia l'ID client (`….apps.googleusercontent.com`) in `GOOGLE_CLIENT_ID` dentro `assets/js/firebase-config.js`.
+
+Massimo 20 destinatari per invio, uno alla volta. Le email inviate restano nella cartella "Inviati" di Gmail.
+
 ## Traduzione e cookie
 
 Il selettore lingua nell'header usa Google Traduttore e permette di tradurre il sito in tutte le lingue disponibili.

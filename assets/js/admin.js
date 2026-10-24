@@ -251,6 +251,37 @@ listEl.addEventListener("click", (e) => {
   if (b) openCliente(b.dataset.open).catch((err) => toast(erroreIt(err), true));
 });
 
+/* ---------------------------------------------------------------- Schede */
+
+/* "Clienti e account" ed "Email" sono sezioni separate; l'Email si carica solo quando la apri */
+let emailReady = null;
+function initTabs() {
+  const tabs = Array.from(document.querySelectorAll('#adminTabs [role="tab"]'));
+  document.getElementById("adminTabs").hidden = false;
+  function select(tab) {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+    if (tab.id === "tab-email" && !emailReady) {
+      emailReady = import("./admin-email.js").then((m) => m.initEmail()).catch((err) => { emailReady = null; toast(erroreIt(err), true); });
+    }
+    try { history.replaceState(null, "", tab.id === "tab-email" ? "#email" : "#clienti"); } catch (e) {}
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => select(t));
+    t.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+      next.focus();
+      select(next);
+    });
+  });
+  if (location.hash === "#email") select(tabs[1]);
+}
+
 /* ---------------------------------------------------------------- Avvio */
 
 if (!ready) {
@@ -272,6 +303,7 @@ if (!ready) {
     if (!isAdmin(user)) { location.replace("area.html"); return; }
     gate.hidden = true;
     app.hidden = false;
+    initTabs();
     loadClienti().catch((err) => toast(erroreIt(err), true));
   });
 }
