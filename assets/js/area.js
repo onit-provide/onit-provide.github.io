@@ -8,7 +8,7 @@ import {
 } from "./account.js";
 
 const root = document.getElementById("areaRoot");
-const ASSISTENZA = "assistenza.onit@gmail.com";
+const ASSISTENZA = "help@onitweb.eu";
 let cliente = { email: "" };
 
 /* Email all'assistenza già compilata con i dati del cliente e l'argomento */

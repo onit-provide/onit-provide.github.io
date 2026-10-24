@@ -75,17 +75,18 @@ function aggiornaGmail() {
     return;
   }
   const da = mittente().email;
-  if (isConnected(da)) {
-    gmailBox.innerHTML = '<span class="dot dot--on" aria-hidden="true"></span> Gmail collegata: le email partono da <strong>' + esc(da) + '</strong>. <button type="button" class="link-btn" id="gmailOff">Scollega</button>';
+  const account = mittente().account;
+  if (isConnected(account)) {
+    gmailBox.innerHTML = '<span class="dot dot--on" aria-hidden="true"></span> Collegato tramite ' + esc(account) + ': le email partono da <strong>' + esc(da) + '</strong>. <button type="button" class="link-btn" id="gmailOff">Scollega</button>';
     document.getElementById("gmailOff").addEventListener("click", () => { disconnect(); aggiornaGmail(); });
   } else {
     const altro = connectedAccount();
     gmailBox.innerHTML = '<span class="dot" aria-hidden="true"></span> ' +
-      (altro ? "Sei collegato come " + esc(altro) + ": per inviare da <strong>" + esc(da) + "</strong> collega questo account. " : "Gmail non collegata. ") +
-      '<button type="button" class="btn btn--sm" id="gmailOn">Collega ' + esc(da) + "</button>" +
-      '<span class="gmail-hint">Nella finestra di Google scegli l\'account ' + esc(da) + ".</span>";
+      (altro ? "Sei collegato come " + esc(altro) + ": per inviare da <strong>" + esc(da) + "</strong> collega " + esc(account) + ". " : "Gmail non collegata. ") +
+      '<button type="button" class="btn btn--sm" id="gmailOn">Collega ' + esc(account) + "</button>" +
+      '<span class="gmail-hint">Nella finestra di Google scegli l\'account ' + esc(account) + ": le email partiranno da " + esc(da) + ".</span>";
     document.getElementById("gmailOn").addEventListener("click", async () => {
-      try { await connect(da); say("Gmail collegata ✓"); } catch (err) { say(err.message, true); }
+      try { await connect(account); say("Gmail collegata ✓"); } catch (err) { say(err.message, true); }
       aggiornaGmail();
     });
   }
@@ -117,7 +118,7 @@ function registra(to, oggetto, esito, ok) {
 
 async function invia(to) {
   const m = mittente();
-  if (!isConnected(m.email)) { aggiornaGmail(); throw new Error("Prima clicca \"Collega " + m.email + "\" qui sopra."); }
+  if (!isConnected(m.account)) { aggiornaGmail(); throw new Error("Prima clicca \"Collega " + m.account + "\" qui sopra."); }
   const d = dati();
   const html = creaEmail(d), text = creaTesto(d);
   let ok = 0;

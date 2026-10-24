@@ -91,6 +91,8 @@ export function buildMime({ to, subject, html, text, from = ADMIN_EMAIL, fromNam
     'From: "' + fromName.replace(/["\r\n]/g, "") + '" <' + from + ">",
     "To: " + to,
     "Subject: " + encodeHeader(String(subject).replace(/[\r\n]+/g, " ")),
+    // Pulsante "Annulla iscrizione" nei programmi di posta: risponde al mittente con oggetto CANCELLA
+    "List-Unsubscribe: <mailto:" + from + "?subject=CANCELLA>",
     "MIME-Version: 1.0",
     'Content-Type: multipart/alternative; boundary="' + boundary + '"',
     "",
