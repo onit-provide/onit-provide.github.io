@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <script>
+    // Forza HTTPS (escluso l'uso in locale)
+    if (location.protocol === "http:" && !/^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname)) location.replace("https:" + location.href.slice(5));
+    document.documentElement.classList.add("js");
+  </script>
+  <title>Pannello admin — ON.IT</title>
+  <meta name="description" content="Gestione clienti, piani e progetti ON.IT.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://onit-provide.github.io/admin.html">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ON.IT">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Pannello admin — ON.IT">
+  <meta property="og:description" content="Gestione clienti, piani e progetti ON.IT.">
+  <meta property="og:url" content="https://onit-provide.github.io/admin.html">
+  <meta property="og:image" content="https://onit-provide.github.io/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ON.IT — Siti web su misura per la tua attività">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pannello admin — ON.IT">
+  <meta name="twitter:description" content="Gestione clienti, piani e progetti ON.IT.">
+  <meta name="twitter:image" content="https://onit-provide.github.io/assets/img/og-image.jpg">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preload" href="assets/fonts/montserrat-900-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <link rel="modulepreload" href="assets/js/account.js">
+  <script type="module" src="assets/js/admin.js"></script>
+</head>
+<body data-page="admin">
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+
+  <main id="main">
+    <section class="page-hero area-hero">
+      <div class="container">
+        <span class="eyebrow">Riservato a ON.IT</span>
+        <h1 class="display area-title">Pannello admin</h1>
+        <div class="hero-bottom">
+          <p class="lead">Crea gli account dei clienti e aggiorna i loro piani e progetti: le modifiche compaiono subito nella loro area.</p>
+          <div class="hero-actions">
+            <a class="btn btn--ghost btn--sm" href="area.html">La mia area</a>
+            <button class="btn btn--ghost btn--sm" type="button" data-logout>Esci</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="adminGate" class="container"><p class="empty-box">Verifica dell'accesso…</p></div>
+
+    <section class="section section--light admin" id="adminApp" hidden>
+      <div class="container admin-layout">
+        <aside>
+          <form class="form admin-card" id="newClientForm" novalidate>
+            <h2 class="h3">Nuovo cliente</h2>
+            <div class="field"><label for="nc-nome">Nome referente</label><input id="nc-nome" name="nome" required placeholder="es. Mario Rossi"></div>
+            <div class="field"><label for="nc-azienda">Azienda</label><input id="nc-azienda" name="azienda" placeholder="es. Rossi Srl"></div>
+            <div class="field"><label for="nc-email">Email</label><input id="nc-email" name="email" type="email" required placeholder="cliente@azienda.it"></div>
+            <button class="btn btn--sm" type="submit">Crea account e invia email</button>
+            <p class="admin-help">Il cliente riceve un'email per scegliere la propria password, poi accede da "Area clienti".</p>
+          </form>
+          <div class="admin-card">
+            <h2 class="h3">Clienti (<span id="clientCount">0</span>)</h2>
+            <div class="client-list" id="clientList"></div>
+          </div>
+        </aside>
+        <div>
+          <div class="form-status" id="adminToast" role="status" aria-live="polite"></div>
+          <div id="clientDetail"><p class="empty-box">Seleziona un cliente dall'elenco per gestire piani e progetti.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

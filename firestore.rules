@@ -1,0 +1,32 @@
+rules_version = '2';
+
+// Regole di sicurezza dell'area clienti ON.IT
+// - ogni cliente può solo LEGGERE i propri dati (clienti/{suo uid} e sottocartelle)
+// - solo l'amministratore (email verificata) può leggere e modificare tutto
+// - qualsiasi altra lettura o scrittura è negata
+// Da incollare in: Console Firebase → Firestore Database → Regole → Pubblica
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email == "onitproviderbusiness@gmail.com"
+        && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /clienti/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow write: if isAdmin();
+
+      match /{sottocartella=**} {
+        allow read: if isAdmin() || isOwner(uid);
+        allow write: if isAdmin();
+      }
+    }
+  }
+}

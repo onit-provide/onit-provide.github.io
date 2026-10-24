@@ -27,6 +27,17 @@ window.ONIT = {
      -------------------------------------------------------------------- */
   news: [
     {
+      data: "2026-10-24",
+      categoria: "nuova-sezione",
+      titolo: "Nasce l'Area clienti",
+      testo: "I clienti ON.IT possono ora accedere a un'area riservata dal menu \"Area clienti\" e trovare in un unico posto tutto ciò che riguarda il proprio sito.",
+      punti: [
+        "I miei piani: piano attivo, data di inizio e di rinnovo",
+        "Lavori in corso: fase del progetto, percentuale di avanzamento e ultimi aggiornamenti",
+        "Progetti completati: storico dei siti consegnati con link diretto"
+      ]
+    },
+    {
       data: "2026-10-18",
       categoria: "nuova-sezione",
       titolo: "Privacy, cookie e termini di servizio",

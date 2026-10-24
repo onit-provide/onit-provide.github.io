@@ -12,6 +12,9 @@ Sito statico (HTML, CSS, JavaScript) di ON.IT, senza dipendenze da installare.
 | `privacy.html` | Privacy policy e cookie policy (GDPR) |
 | `termini.html` | Termini e condizioni del servizio |
 | `404.html` | Pagina di errore personalizzata |
+| `accedi.html` | Accesso all'area clienti e recupero password |
+| `area.html` | Area clienti: I miei piani, Lavori in corso, Progetti completati |
+| `admin.html` | Pannello admin (solo ON.IT): clienti, piani e progetti |
 
 ## Modificare i contenuti
 
@@ -29,6 +32,25 @@ Header e footer sono generati da `assets/js/main.js`, lo stile è in `assets/css
 Il modulo invia le richieste tramite [FormSubmit](https://formsubmit.co) all'indirizzo email indicato in `data.js`.
 Alla **prima richiesta** FormSubmit invia un'email di attivazione a quell'indirizzo: va confermata una sola volta.
 Se l'invio non riesce, il modulo apre il programma di posta del visitatore con i dati già compilati.
+
+## Area clienti (Firebase)
+
+L'area clienti usa Firebase (Authentication + Firestore). Finché `assets/js/firebase-config.js` è vuoto,
+le pagine mostrano "Area clienti in arrivo". Per attivarla:
+
+1. Crea un progetto su https://console.firebase.google.com (Google Analytics non serve).
+2. **Authentication** → Inizia → abilita **Email/password**. In *Settings → Authorized domains* aggiungi `onit-provide.github.io`.
+3. **Firestore Database** → Crea database (località europea, es. `eur3`) in modalità produzione,
+   poi in **Regole** incolla il contenuto di `firestore.rules` e pubblica.
+4. **Impostazioni progetto** → Le tue app → aggiungi un'**app web** e copia la configurazione in `assets/js/firebase-config.js`.
+5. **Authentication → Users → Add user** con `onitproviderbusiness@gmail.com` e una password,
+   poi accedi dal sito e conferma l'email con il pulsante "Invia email di verifica".
+
+Da quel momento, dal **Pannello admin** crei i clienti: ricevono un'email per scegliere la password.
+Le regole in `firestore.rules` fanno sì che ogni cliente legga solo i propri dati e che solo l'admin possa scrivere.
+
+Prove in locale con gli emulatori: `npx firebase-tools emulators:start --project demo-onit`,
+poi apri `http://localhost:8000/accedi.html?emulatori`.
 
 ## Traduzione e cookie
 
