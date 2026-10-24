@@ -112,7 +112,7 @@
   var curtain = el('<div class="page-curtain' + (fromInternal ? "" : " is-skipped") + '" aria-hidden="true"><img src="assets/img/logo-black.png" alt="" width="586" height="170"></div>');
   document.body.insertBefore(curtain, document.body.firstChild);
   document.body.appendChild(footer);
-  if (page !== "home") {
+  if (["home", "accedi", "area", "admin"].indexOf(page) === -1) {
     document.body.appendChild(el('<a class="btn fab" href="' + bookHref + '">Prenota un incontro</a>'));
     document.body.classList.add("has-fab");
   }

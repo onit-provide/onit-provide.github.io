@@ -3,7 +3,7 @@ import {
   signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence,
   browserLocalPersistence, browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { auth, ready, currentUser, isAdmin, erroreIt, notConfiguredNotice } from "./account.js";
+import { auth, ready, currentUser, isAdminEmail, erroreIt, notConfiguredNotice } from "./account.js";
 
 const root = document.getElementById("authRoot");
 const form = document.getElementById("loginForm");
@@ -15,8 +15,9 @@ function show(msg, isError) {
   status.classList.toggle("is-error", !!isError);
 }
 
+// L'amministratore va sempre al pannello: lì, se serve, gli viene chiesto di verificare l'email
 function goTo(user) {
-  location.replace(isAdmin(user) ? "admin.html" : "area.html");
+  location.replace(isAdminEmail(user) ? "admin.html" : "area.html");
 }
 
 if (!ready) {

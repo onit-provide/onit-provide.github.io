@@ -52,6 +52,8 @@ export function secondaryAuth() {
   return a;
 }
 
+/* Account con l'email dell'amministratore (anche se non ancora verificata) */
+export const isAdminEmail = (user) => Boolean(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL);
 export const isAdmin = (user) => Boolean(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL && user.emailVerified);
 
 /* Attende lo stato dell'accesso (una sola volta) */
