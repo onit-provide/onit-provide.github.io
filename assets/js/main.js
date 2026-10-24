@@ -47,6 +47,7 @@
           '<a href="news.html"' + cur("news") + ">News</a>" +
           '<a href="recensioni.html"' + cur("recensioni") + ">Recensioni</a>" +
           '<a href="' + bookHref + '" class="nav-book">Contatti</a>' +
+          '<a href="accedi.html"' + (["accedi", "area", "admin"].indexOf(page) > -1 ? ' aria-current="page"' : "") + ">Area clienti</a>" +
         "</nav>" +
         '<div class="header-tools">' +
           '<div class="lang notranslate" title="Traduci il sito">' +
@@ -77,6 +78,7 @@
               '<li><a href="news.html">News</a></li>' +
               '<li><a href="recensioni.html">Recensioni</a></li>' +
               '<li><a href="' + bookHref + '">Prenota un incontro</a></li>' +
+              '<li><a href="accedi.html">Area clienti</a></li>' +
             "</ul>" +
           "</div>" +
           "<div>" +
