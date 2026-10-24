@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://onit-provide.github.io/website-test/</loc>
+    <loc>https://onit-provide.github.io/</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://onit-provide.github.io/website-test/news.html</loc>
+    <loc>https://onit-provide.github.io/news.html</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://onit-provide.github.io/website-test/recensioni.html</loc>
+    <loc>https://onit-provide.github.io/recensioni.html</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://onit-provide.github.io/website-test/privacy.html</loc>
+    <loc>https://onit-provide.github.io/privacy.html</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://onit-provide.github.io/website-test/termini.html</loc>
+    <loc>https://onit-provide.github.io/termini.html</loc>
     <lastmod>2026-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

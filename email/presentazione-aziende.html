@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Email di presentazione ON.IT</title>
+  <style>
+    /* Stile della pagina di lavoro: NON viene copiato nell'email */
+    :root { color-scheme: light; }
+    body { margin: 0; background: #e9e9e7; font-family: Arial, Helvetica, sans-serif; color: #111; }
+    .tool { max-width: 640px; margin: 0 auto; padding: 24px 16px 8px; }
+    .tool h1 { font-size: 20px; margin: 0 0 6px; letter-spacing: -0.01em; }
+    .tool p { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: #333; }
+    .tool ol { margin: 0 0 16px; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #333; }
+    .fields { display: grid; gap: 10px; grid-template-columns: 1fr; margin-bottom: 14px; }
+    @media (min-width: 560px) { .fields { grid-template-columns: 1fr 1fr 1fr; } }
+    .fields label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #444; }
+    .fields input { font: inherit; font-size: 15px; font-weight: 400; text-transform: none; letter-spacing: 0; padding: 10px 12px; border: 1.5px solid #8a8a8a; background: #fff; color: #111; min-width: 0; }
+    .fields input:focus { outline: 2px solid #000; outline-offset: 1px; }
+    .subject { display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px; }
+    .subject code { flex: 1; min-width: 0; background: #fff; border: 1.5px solid #8a8a8a; padding: 10px 12px; font-family: inherit; font-size: 14px; overflow-wrap: anywhere; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .btn { font: inherit; font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; padding: 0 20px; min-height: 46px; border: 2px solid #000; background: #000; color: #fff; cursor: pointer; }
+    .btn:hover { background: #fff; color: #000; }
+    .btn--ghost { background: #fff; color: #000; }
+    .btn--ghost:hover { background: #000; color: #fff; }
+    .status { font-size: 14px; font-weight: 700; min-height: 20px; }
+    .preview-label { max-width: 640px; margin: 20px auto 8px; padding: 0 16px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #555; }
+    .preview { padding: 0 0 40px; }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       PANNELLO DI LAVORO (non fa parte dell'email)
+       ===================================================================== -->
+  <div class="tool">
+    <h1>Email di presentazione ON.IT</h1>
+    <p>Personalizza i campi, copia l'email e incollala in un nuovo messaggio di Gmail.</p>
+    <ol>
+      <li>Compila i tre campi qui sotto: l'anteprima si aggiorna da sola.</li>
+      <li>Clicca <strong>Copia l'email</strong>.</li>
+      <li>In Gmail apri <strong>Scrivi</strong>, clicca nel corpo del messaggio e incolla (<strong>Ctrl+V</strong>, oppure <strong>⌘+V</strong> su Mac).</li>
+      <li>Copia l'oggetto qui sotto, aggiungi il destinatario e invia.</li>
+    </ol>
+
+    <div class="fields">
+      <label>Nome referente <input id="f-referente" type="text" placeholder="es. Rossi" autocomplete="off"></label>
+      <label>Nome azienda <input id="f-azienda" type="text" placeholder="es. Rossi Srl" autocomplete="off"></label>
+      <label>Tuo nome (firma) <input id="f-firma" type="text" placeholder="es. Marco Bianchi" autocomplete="off"></label>
+    </div>
+
+    <div class="subject">
+      <code id="subjectText">Un sito web su misura per <span data-field="azienda">la vostra azienda</span> — ON.IT</code>
+      <button type="button" class="btn btn--ghost" id="copySubject">Copia oggetto</button>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn" id="copyEmail">Copia l'email</button>
+      <span class="status" id="status" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div class="preview-label">Anteprima dell'email</div>
+
+  <!-- =====================================================================
+       EMAIL — tutto ciò che è dentro #email viene copiato.
+       Solo tabelle e stili in linea: è il formato che Gmail mantiene.
+       Il logo viene caricato dal sito pubblicato (GitHub Pages).
+       ===================================================================== -->
+  <div class="preview">
+  <div id="email">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e9e9e7;">
+    <tr>
+      <td align="center" style="padding:0 12px;">
+
+        <!-- Testo di anteprima (visibile solo nell'elenco della posta) -->
+        <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;color:#e9e9e7;">Siti web professionali su misura per la vostra attività: dal primo incontro alla pubblicazione, ci occupiamo noi di tutto.</div>
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-collapse:collapse;">
+
+          <!-- INTESTAZIONE -->
+          <tr>
+            <td bgcolor="#000000" style="background-color:#000000;padding:36px 40px 32px 40px;">
+              <a href="https://onit-provide.github.io/" target="_blank" style="text-decoration:none;">
+                <img src="https://onit-provide.github.io/assets/img/logo-white.png" width="150" height="44" alt="ON.IT" style="display:block;width:150px;height:auto;border:0;outline:none;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:32px;font-weight:900;">
+              </a>
+              <p style="margin:34px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#bdbdbd;">Siti web su misura per le aziende</p>
+              <h1 style="margin:12px 0 0 0;font-family:'Arial Black',Arial,Helvetica,sans-serif;font-size:34px;line-height:38px;font-weight:900;letter-spacing:-1px;text-transform:uppercase;color:#ffffff;">Il vostro sito.<br>Fatto bene.<br>Subito online.</h1>
+            </td>
+          </tr>
+
+          <!-- INTRODUZIONE -->
+          <tr>
+            <td style="padding:40px 40px 8px 40px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:26px;color:#1a1a1a;">
+              <p style="margin:0 0 18px 0;">Gentile <span data-field="referente">Responsabile</span>,</p>
+              <p style="margin:0 0 18px 0;">mi chiamo <span data-field="firma">[Il tuo nome]</span> e vi scrivo da <strong>ON.IT</strong>, una piccola realtà tecnica che progetta e realizza <strong>siti web su richiesta</strong> per attività, aziende e professionisti.</p>
+              <p style="margin:0 0 18px 0;">Oggi la maggior parte dei clienti cerca online prima di scegliere a chi rivolgersi. Un sito chiaro, veloce e curato è spesso il primo contatto con <span data-field="azienda">la vostra azienda</span>: per questo vorremmo proporvi un progetto costruito sulle vostre esigenze, senza modelli già pronti.</p>
+            </td>
+          </tr>
+
+          <!-- COSA FACCIAMO -->
+          <tr>
+            <td style="padding:24px 40px 8px 40px;">
+              <p style="margin:0 0 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#595959;">Cosa facciamo</p>
+              <h2 style="margin:0 0 20px 0;font-family:'Arial Black',Arial,Helvetica,sans-serif;font-size:24px;line-height:28px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;color:#000000;">Un sito che lavora per voi</h2>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="44" valign="top" style="padding:0 0 22px 0;font-family:'Arial Black',Arial,sans-serif;font-size:15px;line-height:22px;font-weight:900;color:#000000;">01</td>
+                  <td valign="top" style="padding:0 0 22px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#1a1a1a;"><strong style="color:#000000;">Design su misura.</strong> Studiamo la vostra attività, i vostri clienti e la vostra identità, e realizziamo un sito unico e coerente con il vostro marchio, pensato per trasmettere fiducia e professionalità.</td>
+                </tr>
+                <tr>
+                  <td width="44" valign="top" style="padding:0 0 22px 0;font-family:'Arial Black',Arial,sans-serif;font-size:15px;line-height:22px;font-weight:900;color:#000000;">02</td>
+                  <td valign="top" style="padding:0 0 22px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#1a1a1a;"><strong style="color:#000000;">Perfetto su ogni schermo.</strong> Il sito è veloce e leggibile su smartphone, tablet e computer, perché è soprattutto da telefono che i clienti vi cercano.</td>
+                </tr>
+                <tr>
+                  <td width="44" valign="top" style="padding:0 0 22px 0;font-family:'Arial Black',Arial,sans-serif;font-size:15px;line-height:22px;font-weight:900;color:#000000;">03</td>
+                  <td valign="top" style="padding:0 0 22px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#1a1a1a;"><strong style="color:#000000;">Facile da trovare.</strong> Strutturiamo pagine e contenuti in modo ottimizzato per i motori di ricerca, così chi cerca i vostri servizi trova voi.</td>
+                </tr>
+                <tr>
+                  <td width="44" valign="top" style="padding:0 0 8px 0;font-family:'Arial Black',Arial,sans-serif;font-size:15px;line-height:22px;font-weight:900;color:#000000;">04</td>
+                  <td valign="top" style="padding:0 0 8px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#1a1a1a;"><strong style="color:#000000;">Assistenza continua.</strong> Dopo la pubblicazione restiamo al vostro fianco per aggiornamenti, modifiche e supporto tecnico, con risposta entro 24 ore lavorative.</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- COSA INCLUDE -->
+          <tr>
+            <td style="padding:24px 40px 8px 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #000000;">
+                <tr>
+                  <td style="padding:24px 24px 18px 24px;font-family:Arial,Helvetica,sans-serif;">
+                    <p style="margin:0 0 14px 0;font-family:'Arial Black',Arial,sans-serif;font-size:15px;line-height:20px;font-weight:900;text-transform:uppercase;color:#000000;">Ogni sito include già</p>
+                    <p style="margin:0 0 8px 0;font-size:15px;line-height:22px;color:#1a1a1a;">&mdash;&nbsp; Design responsive per smartphone, tablet e computer</p>
+                    <p style="margin:0 0 8px 0;font-size:15px;line-height:22px;color:#1a1a1a;">&mdash;&nbsp; Modulo di contatto per ricevere richieste dai clienti</p>
+                    <p style="margin:0 0 8px 0;font-size:15px;line-height:22px;color:#1a1a1a;">&mdash;&nbsp; Connessione sicura HTTPS e pagine veloci da caricare</p>
+                    <p style="margin:0 0 8px 0;font-size:15px;line-height:22px;color:#1a1a1a;">&mdash;&nbsp; Pagine privacy e cookie con banner per il consenso</p>
+                    <p style="margin:0 0 6px 0;font-size:15px;line-height:22px;color:#1a1a1a;">&mdash;&nbsp; Ottimizzazione di base per Google e anteprima curata sui social</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- PIANI -->
+          <tr>
+            <td style="padding:32px 40px 8px 40px;">
+              <p style="margin:0 0 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#595959;">I nostri piani</p>
+              <h2 style="margin:0 0 20px 0;font-family:'Arial Black',Arial,Helvetica,sans-serif;font-size:24px;line-height:28px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;color:#000000;">Scegliete il vostro</h2>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:18px 20px;border:2px solid #000000;font-family:Arial,Helvetica,sans-serif;">
+                    <p style="margin:0;font-family:'Arial Black',Arial,sans-serif;font-size:18px;line-height:22px;font-weight:900;text-transform:uppercase;color:#000000;">Start</p>
+                    <p style="margin:6px 0 0 0;font-size:14px;line-height:21px;color:#1a1a1a;">Il sito vetrina ideale per presentare l'attività e farsi contattare: una pagina con sezioni dedicate, modulo di contatto, mappa e link ai social.</p>
+                  </td>
+                </tr>
+                <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
+                <tr>
+                  <td bgcolor="#000000" style="padding:18px 20px;background-color:#000000;border:2px solid #000000;font-family:Arial,Helvetica,sans-serif;">
+                    <p style="margin:0;font-family:'Arial Black',Arial,sans-serif;font-size:18px;line-height:22px;font-weight:900;text-transform:uppercase;color:#ffffff;">Business <span style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;color:#bdbdbd;">&nbsp;IL PIÙ SCELTO</span></p>
+                    <p style="margin:6px 0 0 0;font-size:14px;line-height:21px;color:#e6e6e6;">Il sito aziendale completo: fino a 5 pagine personalizzate, ottimizzazione SEO, sezione news aggiornabile, traduzione in più lingue e assistenza dedicata dopo il lancio.</p>
+                  </td>
+                </tr>
+                <tr><td style="height:10px;line-height:10px;font-size:10px;">&nbsp;</td></tr>
+                <tr>
+                  <td style="padding:18px 20px;border:2px solid #000000;font-family:Arial,Helvetica,sans-serif;">
+                    <p style="margin:0;font-family:'Arial Black',Arial,sans-serif;font-size:18px;line-height:22px;font-weight:900;text-transform:uppercase;color:#000000;">Premium</p>
+                    <p style="margin:6px 0 0 0;font-size:14px;line-height:21px;color:#1a1a1a;">Il progetto su misura con funzioni avanzate: pagine illimitate, prenotazioni online, catalogo o e-commerce, integrazioni con strumenti esterni e assistenza prioritaria.</p>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:14px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#4a4a4a;">Per ogni piano prepariamo un <strong style="color:#000000;">preventivo personalizzato entro 24 ore lavorative</strong>. Il pagamento avviene solo dopo l'approvazione della proposta.</p>
+            </td>
+          </tr>
+
+          <!-- METODO -->
+          <tr>
+            <td style="padding:32px 40px 8px 40px;">
+              <p style="margin:0 0 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#595959;">Come lavoriamo</p>
+              <h2 style="margin:0 0 18px 0;font-family:'Arial Black',Arial,Helvetica,sans-serif;font-size:24px;line-height:28px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;color:#000000;">Dall'idea al sito online</h2>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,Helvetica,sans-serif;">
+                <tr><td style="padding:12px 0;border-top:1px solid #d0d0d0;font-size:15px;line-height:22px;color:#1a1a1a;"><strong style="color:#000000;">1. Incontro</strong> &mdash; ascoltiamo le vostre esigenze e definiamo insieme obiettivi e contenuti.</td></tr>
+                <tr><td style="padding:12px 0;border-top:1px solid #d0d0d0;font-size:15px;line-height:22px;color:#1a1a1a;"><strong style="color:#000000;">2. Proposta</strong> &mdash; vi presentiamo il piano più adatto, con un preventivo chiaro e tempi definiti.</td></tr>
+                <tr><td style="padding:12px 0;border-top:1px solid #d0d0d0;font-size:15px;line-height:22px;color:#1a1a1a;"><strong style="color:#000000;">3. Realizzazione</strong> &mdash; sviluppiamo il sito e vi mostriamo ogni avanzamento fino alla vostra approvazione.</td></tr>
+                <tr><td style="padding:12px 0;border-top:1px solid #d0d0d0;border-bottom:1px solid #d0d0d0;font-size:15px;line-height:22px;color:#1a1a1a;"><strong style="color:#000000;">4. Online e supporto</strong> &mdash; pubblichiamo il sito e restiamo disponibili per assistenza e nuove funzioni.</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- INVITO ALL'AZIONE -->
+          <tr>
+            <td style="padding:36px 40px 40px 40px;font-family:Arial,Helvetica,sans-serif;">
+              <p style="margin:0 0 22px 0;font-size:16px;line-height:26px;color:#1a1a1a;">Vi propongo un <strong>primo incontro gratuito e senza impegno</strong>, in videochiamata o presso la vostra sede, per capire di cosa avete bisogno e mostrarvi come possiamo aiutarvi.</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td bgcolor="#000000" style="background-color:#000000;">
+                    <a href="https://onit-provide.github.io/?tipo=incontro#prenota" target="_blank" style="display:inline-block;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#ffffff;text-decoration:none;border:2px solid #000000;">Prenota un incontro &rarr;</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:18px 0 0 0;font-size:14px;line-height:22px;color:#4a4a4a;">Oppure rispondete direttamente a questa email: vi ricontatto io per fissare giorno e orario.</p>
+            </td>
+          </tr>
+
+          <!-- FIRMA -->
+          <tr>
+            <td style="padding:0 40px 36px 40px;font-family:Arial,Helvetica,sans-serif;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:2px solid #000000;">
+                <tr>
+                  <td style="padding-top:22px;font-size:15px;line-height:23px;color:#1a1a1a;">
+                    Cordiali saluti,<br>
+                    <strong style="font-size:16px;color:#000000;"><span data-field="firma">[Il tuo nome]</span></strong><br>
+                    <span style="color:#4a4a4a;">ON.IT &mdash; Siti web su misura</span><br>
+                    <a href="mailto:onitproviderbusiness@gmail.com" style="color:#000000;text-decoration:underline;">onitproviderbusiness@gmail.com</a><br>
+                    <a href="https://onit-provide.github.io/" target="_blank" style="color:#000000;text-decoration:underline;">onit-provide.github.io</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- PIÈ DI PAGINA -->
+          <tr>
+            <td bgcolor="#000000" style="background-color:#000000;padding:24px 40px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#bdbdbd;">
+              Avete ricevuto questa email perché il vostro indirizzo è pubblicato come contatto aziendale. Se non desiderate ricevere altre comunicazioni da ON.IT, rispondete con &laquo;CANCELLA&raquo; e non vi scriveremo più. Il trattamento dei dati è descritto nella nostra <a href="https://onit-provide.github.io/privacy.html" target="_blank" style="color:#ffffff;text-decoration:underline;">privacy policy</a>.
+            </td>
+          </tr>
+
+        </table>
+        <div style="height:24px;line-height:24px;font-size:24px;">&nbsp;</div>
+      </td>
+    </tr>
+  </table>
+  </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var defaults = { referente: "Responsabile", azienda: "la vostra azienda", firma: "[Il tuo nome]" };
+      var status = document.getElementById("status");
+
+      // Aggiorna i campi personalizzati nell'anteprima
+      Object.keys(defaults).forEach(function (key) {
+        var input = document.getElementById("f-" + key);
+        input.addEventListener("input", function () {
+          var v = input.value.trim() || defaults[key];
+          document.querySelectorAll('[data-field="' + key + '"]').forEach(function (n) { n.textContent = v; });
+        });
+      });
+
+      function say(msg) {
+        status.textContent = msg;
+        clearTimeout(say.t);
+        say.t = setTimeout(function () { status.textContent = ""; }, 5000);
+      }
+
+      // Copia mantenendo la grafica: prima prova l'API moderna, poi la selezione classica
+      function copyNode(node, okMsg) {
+        var html = node.innerHTML;
+        var text = node.innerText;
+        if (navigator.clipboard && window.ClipboardItem) {
+          navigator.clipboard.write([new ClipboardItem({
+            "text/html": new Blob([html], { type: "text/html" }),
+            "text/plain": new Blob([text], { type: "text/plain" })
+          })]).then(function () { say(okMsg); }, function () { fallback(node, okMsg); });
+        } else {
+          fallback(node, okMsg);
+        }
+      }
+      function fallback(node, okMsg) {
+        var range = document.createRange();
+        range.selectNode(node);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) {}
+        sel.removeAllRanges();
+        say(ok ? okMsg : "Copia non riuscita: seleziona l'anteprima con il mouse e premi Ctrl+C.");
+      }
+
+      document.getElementById("copyEmail").addEventListener("click", function () {
+        if (!document.getElementById("f-firma").value.trim()) {
+          say("Prima inserisci il tuo nome per la firma.");
+          document.getElementById("f-firma").focus();
+          return;
+        }
+        copyNode(document.getElementById("email"), "Email copiata ✓ Ora incollala in Gmail.");
+      });
+      document.getElementById("copySubject").addEventListener("click", function () {
+        var t = document.getElementById("subjectText").innerText;
+        if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () { say("Oggetto copiato ✓"); }, function () { fallback(document.getElementById("subjectText"), "Oggetto copiato ✓"); });
+        else fallback(document.getElementById("subjectText"), "Oggetto copiato ✓");
+      });
+    })();
+  </script>
+</body>
+</html>
