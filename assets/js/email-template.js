@@ -8,6 +8,13 @@
 export const SITE = "https://onit-provide.github.io/";
 const LOGO = SITE + "assets/img/logo-white.png";
 const EMAIL = "onitproviderbusiness@gmail.com";
+export const EMAIL_ASSISTENZA = "assistenza.onit@gmail.com";
+
+/* Indirizzi da cui il pannello può inviare */
+export const MITTENTI = {
+  commerciale: { email: EMAIL, nome: "ON.IT", etichetta: "ON.IT — " + EMAIL },
+  assistenza: { email: EMAIL_ASSISTENZA, nome: "ON.IT Assistenza", etichetta: "Assistenza — " + EMAIL_ASSISTENZA }
+};
 
 export const MODELLI = {
   personalizzata: "Messaggio personalizzato",
@@ -88,10 +95,12 @@ function corpoPresentazione(azienda) {
 
 /**
  * Costruisce l'email completa.
- * d = { modello, referente, azienda, titolo, messaggio, bottoneTesto, bottoneLink, firma }
+ * d = { modello, mittente, referente, azienda, titolo, messaggio, bottoneTesto, bottoneLink, firma }
  */
 export function creaEmail(d) {
   const presentazione = d.modello === "presentazione";
+  const assistenza = d.mittente === "assistenza";
+  const daEmail = assistenza ? EMAIL_ASSISTENZA : EMAIL;
   const titolo = presentazione ? "Il vostro sito.<br>Fatto bene.<br>Subito online." : esc(d.titolo || "").replace(/\n/g, "<br>");
   const eyebrow = presentazione ? "Siti web su misura per le aziende" : "ON.IT · Siti web su misura";
   const saluto = "Gentile " + esc(d.referente || "Cliente") + ",";
@@ -131,8 +140,9 @@ export function creaEmail(d) {
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:2px solid #000000;"><tr>' +
     '<td style="padding-top:22px;font-size:15px;line-height:23px;color:#1a1a1a;">Cordiali saluti,<br>' +
       '<strong style="font-size:16px;color:#000000;">' + esc(d.firma) + "</strong><br>" +
-      '<span style="color:#4a4a4a;">ON.IT &mdash; Siti web su misura</span><br>' +
-      '<a href="mailto:' + EMAIL + '" style="color:#000000;text-decoration:underline;">' + EMAIL + "</a><br>" +
+      '<span style="color:#4a4a4a;">' + (assistenza ? "ON.IT &mdash; Assistenza clienti" : "ON.IT &mdash; Siti web su misura") + "</span><br>" +
+      '<a href="mailto:' + daEmail + '" style="color:#000000;text-decoration:underline;">' + daEmail + "</a><br>" +
+      (assistenza ? "" : '<span style="color:#4a4a4a;">Assistenza: </span><a href="mailto:' + EMAIL_ASSISTENZA + '" style="color:#000000;text-decoration:underline;">' + EMAIL_ASSISTENZA + "</a><br>") +
       '<a href="' + SITE + '" target="_blank" style="color:#000000;text-decoration:underline;">onit-provide.github.io</a>' +
     "</td>" +
     '<td width="110" valign="bottom" align="right" style="padding-top:22px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#000000" style="background-color:#000000;padding:12px 14px;">' +
@@ -163,7 +173,11 @@ export function creaTesto(d) {
   } else if (d.bottoneTesto && safeUrl(d.bottoneLink)) {
     righe.push(d.bottoneTesto + ": " + safeUrl(d.bottoneLink), "");
   }
-  righe.push("Cordiali saluti,", d.firma, "ON.IT — Siti web su misura", EMAIL, SITE, "",
+  const assistenza = d.mittente === "assistenza";
+  righe.push("Cordiali saluti,", d.firma, assistenza ? "ON.IT — Assistenza clienti" : "ON.IT — Siti web su misura",
+    assistenza ? EMAIL_ASSISTENZA : EMAIL);
+  if (!assistenza) righe.push("Assistenza: " + EMAIL_ASSISTENZA);
+  righe.push(SITE, "",
     "Per non ricevere altre comunicazioni rispondete con «CANCELLA».");
   return righe.join("\n");
 }

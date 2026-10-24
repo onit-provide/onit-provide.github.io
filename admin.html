@@ -93,8 +93,12 @@
         <form class="form admin-card" id="emailForm" novalidate>
           <h2 class="h3">Scrivi un'email</h2>
           <p class="gmail-status" id="gmailStatus" role="status"></p>
+          <p class="admin-help">Usa <strong>Assistenza</strong> per rispondere ai clienti su interventi e problemi: le risposte arriveranno ad assistenza.onit@gmail.com.</p>
 
-          <label class="field"><span class="field-label">Modello</span><select name="modello"></select></label>
+          <div class="form-row">
+            <label class="field"><span class="field-label">Invia da</span><select name="mittente"></select></label>
+            <label class="field"><span class="field-label">Modello</span><select name="modello"></select></label>
+          </div>
           <label class="field"><span class="field-label">Destinatario da elenco clienti (facoltativo)</span><select name="cliente"><option value="">— Nuovo contatto (scrivi i dati qui sotto) —</option></select></label>
           <label class="field"><span class="field-label">Destinatari</span><textarea name="destinatari" rows="2" placeholder="info@azienda.it — più indirizzi separati da virgola"></textarea></label>
           <div class="form-row">

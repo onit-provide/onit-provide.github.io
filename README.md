@@ -20,7 +20,7 @@ Sito statico (HTML, CSS, JavaScript) di ON.IT, senza dipendenze da installare.
 
 Quasi tutto si aggiorna da **`assets/js/data.js`**:
 
-- **Recapiti**: telefono, email e sede (vengono mostrati in tutte le pagine).
+- **Recapiti**: telefono, email, email dell'assistenza e sede (vengono mostrati in tutte le pagine).
 - **News**: aggiungi un nuovo oggetto in cima alla lista `news` a ogni modifica del sito.
 - **Recensioni**: aggiungi un oggetto a `recensioni` con `piano` uguale a `start`, `business` o `premium`.
   Le recensioni con `esempio: true` sono segnaposto: sostituiscile con recensioni reali (o eliminale) prima della pubblicazione.
@@ -32,6 +32,8 @@ Header e footer sono generati da `assets/js/main.js`, lo stile è in `assets/css
 Il modulo invia le richieste tramite [FormSubmit](https://formsubmit.co) all'indirizzo email indicato in `data.js`.
 Alla **prima richiesta** FormSubmit invia un'email di attivazione a quell'indirizzo: va confermata una sola volta.
 Se l'invio non riesce, il modulo apre il programma di posta del visitatore con i dati già compilati.
+Le richieste con motivo **Assistenza** vanno a `emailAssistenza` (assistenza.onit@gmail.com): anche questo indirizzo
+riceve una sola volta l'email di attivazione di FormSubmit.
 
 ## Area clienti (Firebase)
 
@@ -60,10 +62,11 @@ Senza configurazione restano disponibili anteprima, "Copia per Gmail" e "Scarica
 
 1. https://console.cloud.google.com → progetto `onit-area-clienti` → **API e servizi → Libreria** → abilita **Gmail API**.
 2. **Google Auth Platform** (schermata consenso OAuth): app esterna in modalità *Test*, aggiungi
-   `onitproviderbusiness@gmail.com` come utente di test e lo scope `https://www.googleapis.com/auth/gmail.send`.
+   `onitproviderbusiness@gmail.com` **e** `assistenza.onit@gmail.com` come utenti di test e lo scope `https://www.googleapis.com/auth/gmail.send`.
 3. **Client** → Crea client → *Applicazione web* → origine JavaScript autorizzata `https://onit-provide.github.io`.
 4. Copia l'ID client (`….apps.googleusercontent.com`) in `GOOGLE_CLIENT_ID` dentro `assets/js/firebase-config.js`.
 
+Nel campo **Invia da** si sceglie il mittente (commerciale o assistenza): nella finestra di Google va scelto lo stesso account.
 Massimo 20 destinatari per invio, uno alla volta. Le email inviate restano nella cartella "Inviati" di Gmail.
 
 ## Traduzione e cookie

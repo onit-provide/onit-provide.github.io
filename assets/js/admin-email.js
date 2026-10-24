@@ -1,8 +1,8 @@
 /* ON.IT — Pannello admin, sezione Email: scrivi, guarda l'anteprima e invia dalla tua Gmail */
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db, esc } from "./account.js";
-import { creaEmail, creaTesto, MODELLI } from "./email-template.js";
-import { gmailConfigured, isConnected, connect, disconnect, send, preload, EMAIL_RE } from "./gmail.js";
+import { creaEmail, creaTesto, MODELLI, MITTENTI } from "./email-template.js";
+import { gmailConfigured, isConnected, connectedAccount, connect, disconnect, send, preload, EMAIL_RE } from "./gmail.js";
 
 const MAX_DESTINATARI = 20;
 const form = document.getElementById("emailForm");
@@ -21,9 +21,12 @@ function say(msg, isError) {
   statusEl.className = "form-status is-visible" + (isError ? " is-error" : "");
 }
 
+const mittente = () => MITTENTI[el("mittente").value] || MITTENTI.commerciale;
+
 function dati() {
   return {
     modello: el("modello").value,
+    mittente: el("mittente").value,
     referente: el("referente").value.trim(),
     azienda: el("azienda").value.trim(),
     oggetto: el("oggetto").value.trim(),
@@ -71,13 +74,18 @@ function aggiornaGmail() {
     sendBtns.forEach((b) => { b.disabled = true; });
     return;
   }
-  if (isConnected()) {
-    gmailBox.innerHTML = '<span class="dot dot--on" aria-hidden="true"></span> Gmail collegata: le email partono da <strong>onitproviderbusiness@gmail.com</strong>. <button type="button" class="link-btn" id="gmailOff">Scollega</button>';
+  const da = mittente().email;
+  if (isConnected(da)) {
+    gmailBox.innerHTML = '<span class="dot dot--on" aria-hidden="true"></span> Gmail collegata: le email partono da <strong>' + esc(da) + '</strong>. <button type="button" class="link-btn" id="gmailOff">Scollega</button>';
     document.getElementById("gmailOff").addEventListener("click", () => { disconnect(); aggiornaGmail(); });
   } else {
-    gmailBox.innerHTML = '<span class="dot" aria-hidden="true"></span> Gmail non collegata. <button type="button" class="btn btn--sm" id="gmailOn">Collega Gmail</button>';
+    const altro = connectedAccount();
+    gmailBox.innerHTML = '<span class="dot" aria-hidden="true"></span> ' +
+      (altro ? "Sei collegato come " + esc(altro) + ": per inviare da <strong>" + esc(da) + "</strong> collega questo account. " : "Gmail non collegata. ") +
+      '<button type="button" class="btn btn--sm" id="gmailOn">Collega ' + esc(da) + "</button>" +
+      '<span class="gmail-hint">Nella finestra di Google scegli l\'account ' + esc(da) + ".</span>";
     document.getElementById("gmailOn").addEventListener("click", async () => {
-      try { await connect(); say("Gmail collegata ✓"); } catch (err) { say(err.message, true); }
+      try { await connect(da); say("Gmail collegata ✓"); } catch (err) { say(err.message, true); }
       aggiornaGmail();
     });
   }
@@ -108,14 +116,15 @@ function registra(to, oggetto, esito, ok) {
 }
 
 async function invia(to) {
-  if (!isConnected()) { aggiornaGmail(); throw new Error("Prima clicca \"Collega Gmail\" qui sopra."); }
+  const m = mittente();
+  if (!isConnected(m.email)) { aggiornaGmail(); throw new Error("Prima clicca \"Collega " + m.email + "\" qui sopra."); }
   const d = dati();
   const html = creaEmail(d), text = creaTesto(d);
   let ok = 0;
   for (let i = 0; i < to.length; i++) {
     say("Invio in corso… " + (i + 1) + " di " + to.length);
     try {
-      await send({ to: to[i], subject: d.oggetto, html, text });
+      await send({ to: to[i], subject: d.oggetto, html, text, from: m.email, fromName: m.nome });
       registra(to[i], d.oggetto, "inviata ✓", true);
       ok++;
     } catch (err) {
@@ -139,10 +148,12 @@ form.addEventListener("submit", async (e) => {
   btns.forEach((b) => { b.disabled = false; });
 });
 
+// La prova arriva all'indirizzo da cui si sta inviando
 document.getElementById("sendTest").addEventListener("click", async () => {
-  const errore = controlla(["onitproviderbusiness@gmail.com"]);
+  const me = mittente().email;
+  const errore = controlla([me]);
   if (errore) { say(errore, true); return; }
-  try { await invia(["onitproviderbusiness@gmail.com"]); } catch (err) { say(err.message, true); }
+  try { await invia([me]); } catch (err) { say(err.message, true); }
 });
 
 document.getElementById("downloadHtml").addEventListener("click", () => {
@@ -167,6 +178,8 @@ document.getElementById("copyHtml").addEventListener("click", async () => {
 
 /* ---- Avvio ---------------------------------------------------------------- */
 
+el("mittente").innerHTML = Object.keys(MITTENTI).map((k) => '<option value="' + k + '">' + esc(MITTENTI[k].etichetta) + "</option>").join("");
+el("mittente").addEventListener("change", aggiornaGmail);
 el("modello").innerHTML = Object.keys(MODELLI).map((k) => '<option value="' + k + '">' + esc(MODELLI[k]) + "</option>").join("");
 el("oggetto").addEventListener("input", () => { oggettoToccato = el("oggetto").value.trim() !== ""; });
 el("modello").addEventListener("change", () => { if (!oggettoToccato) el("oggetto").value = ""; });

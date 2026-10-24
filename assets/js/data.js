@@ -10,6 +10,8 @@ window.ONIT = {
     telefono: "",
     telefonoLink: "",
     email: "onitproviderbusiness@gmail.com",
+    /* Tutto ciò che riguarda l'assistenza (modulo, area clienti, firme) usa questo indirizzo */
+    emailAssistenza: "assistenza.onit@gmail.com",
     sede: "Uffici in arrivo — per ora incontri in videochiamata o presso la tua attività"
   },
 
@@ -26,6 +28,12 @@ window.ONIT = {
      categoria: "lancio" | "nuova-sezione" | "aggiornamento" | "correzione"
      -------------------------------------------------------------------- */
   news: [
+    {
+      data: "2026-10-24",
+      categoria: "aggiornamento",
+      titolo: "Un indirizzo dedicato all'assistenza",
+      testo: "Per modifiche, problemi o aggiornamenti sul tuo sito ora puoi scrivere direttamente ad assistenza.onit@gmail.com. Le richieste di assistenza inviate dal modulo e dall'Area clienti arrivano a questo indirizzo."
+    },
     {
       data: "2026-10-24",
       categoria: "nuova-sezione",

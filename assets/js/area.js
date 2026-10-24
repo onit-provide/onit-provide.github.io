@@ -8,6 +8,17 @@ import {
 } from "./account.js";
 
 const root = document.getElementById("areaRoot");
+const ASSISTENZA = "assistenza.onit@gmail.com";
+let cliente = { email: "" };
+
+/* Email all'assistenza già compilata con i dati del cliente e l'argomento */
+function mailtoAssistenza(argomento) {
+  const chi = [cliente.nome, cliente.azienda].filter(Boolean).join(" — ");
+  const body = "Buongiorno,\n\n[descrivete qui la richiesta]\n\n---\nCliente: " + (chi || "-") +
+    "\nEmail account: " + (cliente.email || "-") + (argomento ? "\nRiguarda: " + argomento : "");
+  return "mailto:" + ASSISTENZA + "?subject=" + encodeURIComponent("Richiesta di assistenza" + (argomento ? " — " + argomento : "") + (cliente.azienda ? " (" + cliente.azienda + ")" : "")) +
+    "&body=" + encodeURIComponent(body);
+}
 
 function progress(n) {
   const v = Math.max(0, Math.min(100, Number(n) || 0));
@@ -42,7 +53,7 @@ function renderPiani(piani) {
         (p.rinnovo ? "<li>Rinnovo il " + dataIt(p.rinnovo) + "</li>" : "") +
         (p.note ? "<li>" + esc(p.note) + "</li>" : "") +
       "</ul>" +
-      '<a class="btn btn--sm" href="index.html?tipo=assistenza#prenota">Chiedi assistenza</a>' +
+      '<a class="btn btn--sm" href="' + esc(mailtoAssistenza("Piano " + info.nome)) + '">Chiedi assistenza</a>' +
     "</article>";
   }).join("") + "</div>";
 }
@@ -58,6 +69,7 @@ function renderInCorso(list) {
       '<dl class="project-meta"><div><dt>Fase attuale</dt><dd>' + esc(p.fase || "–") + "</dd></div>" +
         "<div><dt>Consegna prevista</dt><dd>" + dataIt(p.consegnaPrevista) + "</dd></div></dl>" +
       aggiornamenti(p.aggiornamenti) +
+      '<a class="link-btn project-help" href="' + esc(mailtoAssistenza(p.titolo)) + '">Scrivi all\'assistenza su questo progetto</a>' +
     "</article>"
   ).join("") + "</div>";
 }
@@ -77,12 +89,14 @@ function renderCompletati(list) {
 }
 
 async function load(user) {
-  const [cliente, pianiSnap, progSnap] = await Promise.all([
+  const [snapCliente, pianiSnap, progSnap] = await Promise.all([
     getDoc(doc(db, "clienti", user.uid)),
     getDocs(collection(db, "clienti", user.uid, "piani")),
     getDocs(collection(db, "clienti", user.uid, "progetti"))
   ]);
-  const c = cliente.exists() ? cliente.data() : {};
+  const c = snapCliente.exists() ? snapCliente.data() : {};
+  cliente = { nome: c.nome, azienda: c.azienda, email: user.email };
+  document.getElementById("assistBtn").href = mailtoAssistenza("");
   const piani = pianiSnap.docs.map((d) => d.data()).sort((a, b) => String(b.inizio).localeCompare(String(a.inizio)));
   const progetti = progSnap.docs.map((d) => d.data());
   const inCorso = progetti.filter((p) => p.stato !== "completato").sort((a, b) => String(a.consegnaPrevista).localeCompare(String(b.consegnaPrevista)));
