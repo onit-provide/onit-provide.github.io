@@ -9,9 +9,9 @@ window.ONIT = {
        Per rimetterlo: telefono: "+39 351 418 5569", telefonoLink: "+393514185569" */
     telefono: "",
     telefonoLink: "",
-    email: "onitproviderbusiness@gmail.com",
+    email: "info@onitweb.eu",
     /* Tutto ciò che riguarda l'assistenza (modulo, area clienti, firme) usa questo indirizzo */
-    emailAssistenza: "assistenza.onit@gmail.com",
+    emailAssistenza: "help@onitweb.eu",
     sede: "Uffici in arrivo — per ora incontri in videochiamata o presso la tua attività"
   },
 
@@ -31,8 +31,19 @@ window.ONIT = {
     {
       data: "2026-10-24",
       categoria: "aggiornamento",
+      titolo: "Il nostro nuovo indirizzo: onitweb.eu",
+      testo: "ON.IT ha ora un dominio tutto suo. Il sito è raggiungibile su onitweb.eu e abbiamo nuovi indirizzi email dedicati.",
+      punti: [
+        "Sito: onitweb.eu",
+        "Contatti, preventivi e incontri: info@onitweb.eu",
+        "Assistenza clienti: help@onitweb.eu"
+      ]
+    },
+    {
+      data: "2026-10-24",
+      categoria: "aggiornamento",
       titolo: "Un indirizzo dedicato all'assistenza",
-      testo: "Per modifiche, problemi o aggiornamenti sul tuo sito ora puoi scrivere direttamente ad assistenza.onit@gmail.com. Le richieste di assistenza inviate dal modulo e dall'Area clienti arrivano a questo indirizzo."
+      testo: "Per modifiche, problemi o aggiornamenti sul tuo sito ora puoi scrivere direttamente ad help@onitweb.eu. Le richieste di assistenza inviate dal modulo e dall'Area clienti arrivano a questo indirizzo."
     },
     {
       data: "2026-10-24",

@@ -32,7 +32,7 @@ Header e footer sono generati da `assets/js/main.js`, lo stile è in `assets/css
 Il modulo invia le richieste tramite [FormSubmit](https://formsubmit.co) all'indirizzo email indicato in `data.js`.
 Alla **prima richiesta** FormSubmit invia un'email di attivazione a quell'indirizzo: va confermata una sola volta.
 Se l'invio non riesce, il modulo apre il programma di posta del visitatore con i dati già compilati.
-Le richieste con motivo **Assistenza** vanno a `emailAssistenza` (assistenza.onit@gmail.com): anche questo indirizzo
+Le richieste con motivo **Assistenza** vanno a `emailAssistenza` (help@onitweb.eu): anche questo indirizzo
 riceve una sola volta l'email di attivazione di FormSubmit.
 
 ## Area clienti (Firebase)
@@ -66,7 +66,10 @@ Senza configurazione restano disponibili anteprima, "Copia per Gmail" e "Scarica
 3. **Client** → Crea client → *Applicazione web* → origini JavaScript autorizzate `https://onitweb.eu`, `https://www.onitweb.eu` e `https://onit-provide.github.io`.
 4. Copia l'ID client (`….apps.googleusercontent.com`) in `GOOGLE_CLIENT_ID` dentro `assets/js/firebase-config.js`.
 
-Nel campo **Invia da** si sceglie il mittente (commerciale o assistenza): nella finestra di Google va scelto lo stesso account.
+Nel campo **Invia da** si sceglie il mittente: **info@onitweb.eu** (si collega `onitproviderbusiness@gmail.com`) o
+**help@onitweb.eu** (si collega `assistenza.onit@gmail.com`). Nelle due Gmail i nuovi indirizzi sono configurati in
+*Impostazioni → Account e importazione → Invia messaggio come* con SMTP `smtps.aruba.it`, porta 465, SSL: le email
+partono dai server Aruba. La posta in arrivo su info@ e help@ è inoltrata da Aruba alle due Gmail.
 Massimo 20 destinatari per invio, uno alla volta. Le email inviate restano nella cartella "Inviati" di Gmail.
 
 ## Traduzione e cookie

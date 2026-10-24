@@ -7,13 +7,15 @@
 
 export const SITE = "https://onitweb.eu/";
 const LOGO = SITE + "assets/img/logo-white.png";
-const EMAIL = "onitproviderbusiness@gmail.com";
-export const EMAIL_ASSISTENZA = "assistenza.onit@gmail.com";
+const EMAIL = "info@onitweb.eu";
+export const EMAIL_ASSISTENZA = "help@onitweb.eu";
 
-/* Indirizzi da cui il pannello può inviare */
+/* Indirizzi da cui il pannello può inviare.
+   "email" è il mittente visibile (casella Aruba); "account" è la Gmail da collegare,
+   dove l'indirizzo è configurato come "Invia messaggio come" tramite il server SMTP di Aruba. */
 export const MITTENTI = {
-  commerciale: { email: EMAIL, nome: "ON.IT", etichetta: "ON.IT — " + EMAIL },
-  assistenza: { email: EMAIL_ASSISTENZA, nome: "ON.IT Assistenza", etichetta: "Assistenza — " + EMAIL_ASSISTENZA }
+  commerciale: { email: EMAIL, account: "onitproviderbusiness@gmail.com", nome: "ON.IT", etichetta: "ON.IT — " + EMAIL },
+  assistenza: { email: EMAIL_ASSISTENZA, account: "assistenza.onit@gmail.com", nome: "ON.IT Help", etichetta: "Assistenza — " + EMAIL_ASSISTENZA }
 };
 
 export const MODELLI = {

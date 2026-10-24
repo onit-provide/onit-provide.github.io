@@ -126,6 +126,6 @@ export function notConfiguredNotice(container) {
   container.innerHTML =
     '<div class="auth-card"><h2 class="h3">Area clienti in arrivo</h2>' +
     "<p>L'area riservata ai clienti sarà disponibile a breve. Nel frattempo puoi scriverci a " +
-    '<a href="mailto:onitproviderbusiness@gmail.com">onitproviderbusiness@gmail.com</a> o usare il ' +
+    '<a href="mailto:info@onitweb.eu">info@onitweb.eu</a> o usare il ' +
     '<a href="index.html#prenota">modulo di contatto</a>.</p></div>';
 }
