@@ -44,7 +44,7 @@ quindi senza consenso il sito non contatta nessun servizio esterno.
 - **Testi legali**: in `privacy.html` e `termini.html` completa i campi evidenziati `[...]` (ragione sociale, sede, P. IVA,
   hosting, foro). I testi sono un modello: falli verificare da un consulente legale.
 - **Indirizzo del sito**: i tag per l'anteprima social, `sitemap.xml` e `robots.txt` usano
-  `https://onit-provide.github.io/website-test/`. Se usi un dominio diverso, sostituisci questo indirizzo in tutti i file.
+  `https://onit-provide.github.io/`. Se usi un dominio diverso, sostituisci questo indirizzo in tutti i file.
 - **HTTPS**: ogni pagina reindirizza automaticamente a HTTPS. Sull'hosting attiva anche il certificato:
   GitHub Pages → Settings → Pages → *Enforce HTTPS*; Netlify lo fa da solo (`netlify.toml`);
   sugli hosting Apache è incluso un `.htaccess` con redirect, intestazioni di sicurezza, compressione e cache.

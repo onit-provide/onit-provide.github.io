@@ -3,4 +3,4 @@ Allow: /
 Disallow: /404.html
 Disallow: /email/
 
-Sitemap: https://onit-provide.github.io/website-test/sitemap.xml
+Sitemap: https://onit-provide.github.io/sitemap.xml
