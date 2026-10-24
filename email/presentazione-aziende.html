@@ -14,10 +14,12 @@
     .tool p { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: #333; }
     .tool ol { margin: 0 0 16px; padding-left: 20px; font-size: 14px; line-height: 1.6; color: #333; }
     .fields { display: grid; gap: 10px; grid-template-columns: 1fr; margin-bottom: 14px; }
-    @media (min-width: 560px) { .fields { grid-template-columns: 1fr 1fr 1fr; } }
+    @media (min-width: 560px) { .fields { grid-template-columns: 1fr 1fr; } }
     .fields label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #444; }
     .fields input { font: inherit; font-size: 15px; font-weight: 400; text-transform: none; letter-spacing: 0; padding: 10px 12px; border: 1.5px solid #8a8a8a; background: #fff; color: #111; min-width: 0; }
     .fields input:focus { outline: 2px solid #000; outline-offset: 1px; }
+    .fields input.is-invalid { border-color: #c00; }
+    .note { font-size: 13px; color: #444; background: #fff; border-left: 3px solid #000; padding: 10px 12px; margin: 0 0 16px; line-height: 1.5; }
     .subject { display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px; }
     .subject code { flex: 1; min-width: 0; background: #fff; border: 1.5px solid #8a8a8a; padding: 10px 12px; font-family: inherit; font-size: 14px; overflow-wrap: anywhere; }
     .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -37,16 +39,18 @@
        ===================================================================== -->
   <div class="tool">
     <h1>Email di presentazione ON.IT</h1>
-    <p>Personalizza i campi, copia l'email e incollala in un nuovo messaggio di Gmail.</p>
+    <p>Compila i campi, poi un solo pulsante copia l'email impaginata e apre Gmail con destinatario e oggetto già inseriti.</p>
     <ol>
-      <li>Compila i tre campi qui sotto: l'anteprima si aggiorna da sola.</li>
-      <li>Clicca <strong>Copia l'email</strong>.</li>
-      <li>In Gmail apri <strong>Scrivi</strong>, clicca nel corpo del messaggio e incolla (<strong>Ctrl+V</strong>, oppure <strong>⌘+V</strong> su Mac).</li>
-      <li>Copia l'oggetto qui sotto, aggiungi il destinatario e invia.</li>
+      <li>Compila i campi qui sotto: l'anteprima si aggiorna da sola.</li>
+      <li>Clicca <strong>Copia e apri Gmail</strong>.</li>
+      <li>In Gmail clicca nel corpo del messaggio e incolla (<strong>Ctrl+V</strong>, su Mac <strong>⌘+V</strong>, su telefono tieni premuto e scegli <strong>Incolla</strong>).</li>
+      <li>Controlla l'anteprima del messaggio e clicca <strong>Invia</strong>.</li>
     </ol>
+    <p class="note">Per il risultato migliore usa Gmail da computer, nel browser. Dall'app Gmail su telefono parte della grafica potrebbe non essere mantenuta.</p>
 
     <div class="fields">
-      <label>Nome referente <input id="f-referente" type="text" placeholder="es. Rossi" autocomplete="off"></label>
+      <label>Email destinatario <input id="f-destinatario" type="email" placeholder="es. info@rossisrl.it" autocomplete="off"></label>
+      <label>Nome referente <input id="f-referente" type="text" placeholder="es. Dott. Rossi" autocomplete="off"></label>
       <label>Nome azienda <input id="f-azienda" type="text" placeholder="es. Rossi Srl" autocomplete="off"></label>
       <label>Tuo nome (firma) <input id="f-firma" type="text" placeholder="es. Marco Bianchi" autocomplete="off"></label>
     </div>
@@ -57,7 +61,8 @@
     </div>
 
     <div class="actions">
-      <button type="button" class="btn" id="copyEmail">Copia l'email</button>
+      <button type="button" class="btn" id="sendGmail">Copia e apri Gmail</button>
+      <button type="button" class="btn btn--ghost" id="copyEmail">Solo copia</button>
       <span class="status" id="status" role="status" aria-live="polite"></span>
     </div>
   </div>
@@ -245,12 +250,20 @@
       var status = document.getElementById("status");
 
       // Aggiorna i campi personalizzati nell'anteprima
+      function sync(key) {
+        var v = document.getElementById("f-" + key).value.trim() || defaults[key];
+        document.querySelectorAll('[data-field="' + key + '"]').forEach(function (n) { n.textContent = v; });
+      }
       Object.keys(defaults).forEach(function (key) {
-        var input = document.getElementById("f-" + key);
-        input.addEventListener("input", function () {
-          var v = input.value.trim() || defaults[key];
-          document.querySelectorAll('[data-field="' + key + '"]').forEach(function (n) { n.textContent = v; });
-        });
+        document.getElementById("f-" + key).addEventListener("input", function () { sync(key); });
+      });
+
+      // La firma viene ricordata su questo browser, così non va riscritta ogni volta
+      var firmaInput = document.getElementById("f-firma");
+      try { firmaInput.value = localStorage.getItem("onit-email-firma") || ""; } catch (e) {}
+      sync("firma");
+      firmaInput.addEventListener("change", function () {
+        try { localStorage.setItem("onit-email-firma", firmaInput.value.trim()); } catch (e) {}
       });
 
       function say(msg) {
@@ -284,13 +297,36 @@
         say(ok ? okMsg : "Copia non riuscita: seleziona l'anteprima con il mouse e premi Ctrl+C.");
       }
 
-      document.getElementById("copyEmail").addEventListener("click", function () {
-        if (!document.getElementById("f-firma").value.trim()) {
-          say("Prima inserisci il tuo nome per la firma.");
-          document.getElementById("f-firma").focus();
-          return;
+      function checkFields(needRecipient) {
+        var to = document.getElementById("f-destinatario");
+        to.classList.remove("is-invalid");
+        if (needRecipient && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to.value.trim())) {
+          to.classList.add("is-invalid");
+          say("Inserisci un indirizzo email valido per il destinatario.");
+          to.focus();
+          return false;
         }
+        if (!firmaInput.value.trim()) {
+          say("Prima inserisci il tuo nome per la firma.");
+          firmaInput.focus();
+          return false;
+        }
+        return true;
+      }
+
+      document.getElementById("copyEmail").addEventListener("click", function () {
+        if (!checkFields(false)) return;
         copyNode(document.getElementById("email"), "Email copiata ✓ Ora incollala in Gmail.");
+      });
+
+      // Copia l'email e apre una nuova bozza di Gmail con destinatario e oggetto
+      document.getElementById("sendGmail").addEventListener("click", function () {
+        if (!checkFields(true)) return;
+        copyNode(document.getElementById("email"), "Email copiata ✓ Incollala nel corpo del messaggio in Gmail.");
+        var url = "https://mail.google.com/mail/?view=cm&fs=1" +
+          "&to=" + encodeURIComponent(document.getElementById("f-destinatario").value.trim()) +
+          "&su=" + encodeURIComponent(document.getElementById("subjectText").innerText);
+        window.open(url, "_blank", "noopener");
       });
       document.getElementById("copySubject").addEventListener("click", function () {
         var t = document.getElementById("subjectText").innerText;
