@@ -14,9 +14,11 @@ export const gmailConfigured = Boolean(GOOGLE_CLIENT_ID);
 
 let token = null;
 let tokenExpiry = 0;
+let account = null; // indirizzo per cui è stato chiesto il permesso
 let gisPromise = null;
 
-export const isConnected = () => Boolean(token) && Date.now() < tokenExpiry;
+export const isConnected = (email) => Boolean(token) && Date.now() < tokenExpiry && (!email || email === account);
+export const connectedAccount = () => account;
 
 /* Carica Google Identity Services solo quando serve */
 function loadGis() {
@@ -36,14 +38,14 @@ function loadGis() {
 
 export const preload = () => (gmailConfigured ? loadGis().catch(() => {}) : null);
 
-/* Chiede a Google il permesso di inviare email (finestra di accesso Google) */
-export async function connect() {
+/* Chiede a Google il permesso di inviare email dall'account indicato (finestra di accesso Google) */
+export async function connect(email = ADMIN_EMAIL) {
   await loadGis();
   return new Promise((resolve, reject) => {
     const client = window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: SCOPE,
-      login_hint: ADMIN_EMAIL,
+      login_hint: email,
       callback: (resp) => {
         if (resp.error) { reject(new Error(resp.error_description || resp.error)); return; }
         if (!window.google.accounts.oauth2.hasGrantedAllScopes(resp, SCOPE)) {
@@ -51,12 +53,13 @@ export async function connect() {
           return;
         }
         token = resp.access_token;
+        account = email;
         tokenExpiry = Date.now() + (Number(resp.expires_in) - 60) * 1000;
         resolve();
       },
       error_callback: (err) => reject(new Error(err && err.type === "popup_closed" ? "Finestra di Google chiusa prima di completare l'accesso." : "Accesso a Google non riuscito."))
     });
-    client.requestAccessToken({ prompt: "" });
+    client.requestAccessToken({ prompt: "select_account" });
   });
 }
 
@@ -64,6 +67,7 @@ export function disconnect() {
   if (token && window.google && window.google.accounts) window.google.accounts.oauth2.revoke(token, () => {});
   token = null;
   tokenExpiry = 0;
+  account = null;
 }
 
 /* ---- Costruzione del messaggio (MIME) ------------------------------------ */
@@ -79,11 +83,12 @@ function b64(str) {
 const wrap = (s) => s.replace(/.{1,76}/g, "$&\r\n").trimEnd();
 const encodeHeader = (s) => "=?UTF-8?B?" + b64(s) + "?=";
 
-export function buildMime({ to, subject, html, text }) {
+export function buildMime({ to, subject, html, text, from = ADMIN_EMAIL, fromName = "ON.IT" }) {
   if (!EMAIL_RE.test(to)) throw new Error("Indirizzo non valido: " + to);
+  if (!EMAIL_RE.test(from)) throw new Error("Mittente non valido: " + from);
   const boundary = "onit_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
   return [
-    'From: "ON.IT" <' + ADMIN_EMAIL + ">",
+    'From: "' + fromName.replace(/["\r\n]/g, "") + '" <' + from + ">",
     "To: " + to,
     "Subject: " + encodeHeader(String(subject).replace(/[\r\n]+/g, " ")),
     "MIME-Version: 1.0",

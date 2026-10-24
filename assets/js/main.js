@@ -12,6 +12,8 @@
   /* Invio del modulo: FormSubmit inoltra le richieste via email senza server.
      Alla PRIMA richiesta arriva un'email di attivazione a questo indirizzo. */
   var FORM_ENDPOINT = "https://formsubmit.co/ajax/" + C.email;
+  // Le richieste di assistenza vanno all'indirizzo dedicato (anche lui va attivato alla prima richiesta)
+  var FORM_ENDPOINT_ASSISTENZA = "https://formsubmit.co/ajax/" + C.emailAssistenza;
 
   var MESI = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
   var page = document.body.getAttribute("data-page");
@@ -86,6 +88,7 @@
             '<ul class="footer-links">' +
               (C.telefono ? '<li><a href="tel:' + C.telefonoLink + '">' + esc(C.telefono) + "</a></li>" : "") +
               '<li><a href="mailto:' + C.email + '">' + esc(C.email) + "</a></li>" +
+              '<li><a href="mailto:' + C.emailAssistenza + '">Assistenza: ' + esc(C.emailAssistenza) + "</a></li>" +
               "<li>" + esc(C.sede) + "</li>" +
             "</ul>" +
           "</div>" +
@@ -127,12 +130,14 @@
     var k = n.getAttribute("data-contact");
     if (k === "telefono") { n.textContent = C.telefono; if (n.tagName === "A") n.href = "tel:" + C.telefonoLink; }
     if (k === "email") { n.textContent = C.email; if (n.tagName === "A") n.href = "mailto:" + C.email; }
+    if (k === "email-assistenza") { n.textContent = C.emailAssistenza; if (n.tagName === "A") n.href = "mailto:" + C.emailAssistenza; }
     if (k === "sede") n.textContent = C.sede;
   });
   document.querySelectorAll("[data-href]").forEach(function (n) {
     var k = n.getAttribute("data-href");
     if (k === "telefono") n.href = "tel:" + C.telefonoLink;
     if (k === "email") n.href = "mailto:" + C.email;
+    if (k === "email-assistenza") n.href = "mailto:" + C.emailAssistenza;
   });
 
   /* ------------------------------------------------------------------------
@@ -440,7 +445,9 @@
       var old = label.textContent;
       label.textContent = "Invio in corso…";
 
-      fetch(FORM_ENDPOINT, {
+      var assistenza = fd.get("tipo") === "assistenza";
+      var destinatario = assistenza ? C.emailAssistenza : C.email;
+      fetch(assistenza ? FORM_ENDPOINT_ASSISTENZA : FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(payload)
@@ -456,7 +463,7 @@
           var body = Object.keys(payload).filter(function (k) { return k.charAt(0) !== "_"; })
             .map(function (k) { return k + ": " + payload[k]; }).join("\n");
           showStatus("Non è stato possibile inviare la richiesta automaticamente. Si aprirà la tua email con i dati già compilati" + (C.telefono ? ": in alternativa chiamaci al " + C.telefono : "") + ".", true);
-          location.href = "mailto:" + C.email + "?subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(body);
+          location.href = "mailto:" + destinatario + "?subject=" + encodeURIComponent(payload._subject) + "&body=" + encodeURIComponent(body);
         })
         .then(function () { btn.disabled = false; label.textContent = old; });
     });
