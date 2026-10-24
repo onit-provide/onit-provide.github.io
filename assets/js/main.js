@@ -42,7 +42,7 @@
 
   var header = el(
     '<header class="site-header" id="header">' +
-      '<div class="container">' +
+      '<div class="container" data-nosnippet>' +
         '<a class="brand" href="' + homeHref + '" aria-label="ON.IT — Home"><img src="assets/img/logo-white.png" alt="ON.IT" width="586" height="170"></a>' +
         '<nav class="nav" id="nav" aria-label="Navigazione principale">' +
           '<a href="index.html"' + cur("home") + ">Home</a>" +
@@ -112,9 +112,12 @@
   // Il sipario compare solo passando da una pagina all'altra: alla prima visita il contenuto è subito visibile
   var fromInternal = false;
   try { fromInternal = sessionStorage.getItem("onit-nav") === "1"; sessionStorage.removeItem("onit-nav"); } catch (e) {}
-  var curtain = el('<div class="page-curtain' + (fromInternal ? "" : " is-skipped") + '" aria-hidden="true"><img src="assets/img/logo-black.png" alt="" width="586" height="170"></div>');
+  var curtain = el('<div data-nosnippet class="page-curtain' + (fromInternal ? "" : " is-skipped") + '" aria-hidden="true"><img src="assets/img/logo-black.png" alt="" width="586" height="170"></div>');
   document.body.insertBefore(curtain, document.body.firstChild);
   document.body.appendChild(footer);
+  // Il collegamento "Vai al contenuto" deve restare il primo elemento raggiungibile con il tasto Tab
+  var skip = document.querySelector(".skip-link");
+  if (skip) document.body.insertBefore(skip.closest("[data-nosnippet]") || skip, document.body.firstChild);
   if (["home", "accedi", "area", "admin"].indexOf(page) === -1) {
     document.body.appendChild(el('<a class="btn fab" href="' + bookHref + '">Prenota un incontro</a>'));
     document.body.classList.add("has-fab");
@@ -274,7 +277,7 @@
   }
 
   var banner = el(
-    '<div class="cookie" id="cookieBanner" role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieText" hidden>' +
+    '<div class="cookie" id="cookieBanner" data-nosnippet role="dialog" aria-labelledby="cookieTitle" aria-describedby="cookieText" hidden>' +
       '<div class="container cookie-inner">' +
         '<div class="cookie-copy">' +
           '<strong class="cookie-title" id="cookieTitle">La tua privacy</strong>' +
