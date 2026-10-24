@@ -5,7 +5,7 @@
    Il logo viene caricato dal sito pubblicato.
    ========================================================================== */
 
-export const SITE = "https://onit-provide.github.io/";
+export const SITE = "https://onitweb.eu/";
 const LOGO = SITE + "assets/img/logo-white.png";
 const EMAIL = "onitproviderbusiness@gmail.com";
 export const EMAIL_ASSISTENZA = "assistenza.onit@gmail.com";
@@ -143,7 +143,7 @@ export function creaEmail(d) {
       '<span style="color:#4a4a4a;">' + (assistenza ? "ON.IT &mdash; Assistenza clienti" : "ON.IT &mdash; Siti web su misura") + "</span><br>" +
       '<a href="mailto:' + daEmail + '" style="color:#000000;text-decoration:underline;">' + daEmail + "</a><br>" +
       (assistenza ? "" : '<span style="color:#4a4a4a;">Assistenza: </span><a href="mailto:' + EMAIL_ASSISTENZA + '" style="color:#000000;text-decoration:underline;">' + EMAIL_ASSISTENZA + "</a><br>") +
-      '<a href="' + SITE + '" target="_blank" style="color:#000000;text-decoration:underline;">onit-provide.github.io</a>' +
+      '<a href="' + SITE + '" target="_blank" style="color:#000000;text-decoration:underline;">onitweb.eu</a>' +
     "</td>" +
     '<td width="110" valign="bottom" align="right" style="padding-top:22px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#000000" style="background-color:#000000;padding:12px 14px;">' +
       '<img src="' + LOGO + '" width="80" height="24" alt="ON.IT" style="display:block;width:80px;height:auto;border:0;color:#ffffff;' + FONT + 'font-size:16px;font-weight:900;">' +

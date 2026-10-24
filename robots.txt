@@ -5,4 +5,4 @@ Disallow: /email/
 Disallow: /area.html
 Disallow: /admin.html
 
-Sitemap: https://onit-provide.github.io/sitemap.xml
+Sitemap: https://onitweb.eu/sitemap.xml

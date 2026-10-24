@@ -41,7 +41,7 @@ L'area clienti usa Firebase (Authentication + Firestore). Finché `assets/js/fir
 le pagine mostrano "Area clienti in arrivo". Per attivarla:
 
 1. Crea un progetto su https://console.firebase.google.com (Google Analytics non serve).
-2. **Authentication** → Inizia → abilita **Email/password**. In *Settings → Authorized domains* aggiungi `onit-provide.github.io`.
+2. **Authentication** → Inizia → abilita **Email/password**. In *Settings → Authorized domains* aggiungi `onitweb.eu`, `www.onitweb.eu` e `onit-provide.github.io`.
 3. **Firestore Database** → Crea database (località europea, es. `eur3`) in modalità produzione,
    poi in **Regole** incolla il contenuto di `firestore.rules` e pubblica.
 4. **Impostazioni progetto** → Le tue app → aggiungi un'**app web** e copia la configurazione in `assets/js/firebase-config.js`.
@@ -63,7 +63,7 @@ Senza configurazione restano disponibili anteprima, "Copia per Gmail" e "Scarica
 1. https://console.cloud.google.com → progetto `onit-area-clienti` → **API e servizi → Libreria** → abilita **Gmail API**.
 2. **Google Auth Platform** (schermata consenso OAuth): app esterna in modalità *Test*, aggiungi
    `onitproviderbusiness@gmail.com` **e** `assistenza.onit@gmail.com` come utenti di test e lo scope `https://www.googleapis.com/auth/gmail.send`.
-3. **Client** → Crea client → *Applicazione web* → origine JavaScript autorizzata `https://onit-provide.github.io`.
+3. **Client** → Crea client → *Applicazione web* → origini JavaScript autorizzate `https://onitweb.eu`, `https://www.onitweb.eu` e `https://onit-provide.github.io`.
 4. Copia l'ID client (`….apps.googleusercontent.com`) in `GOOGLE_CLIENT_ID` dentro `assets/js/firebase-config.js`.
 
 Nel campo **Invia da** si sceglie il mittente (commerciale o assistenza): nella finestra di Google va scelto lo stesso account.
@@ -83,9 +83,9 @@ quindi senza consenso il sito non contatta nessun servizio esterno.
 - **Testi legali**: in `privacy.html` e `termini.html` completa i campi evidenziati `[...]` (ragione sociale, sede, P. IVA,
   hosting, foro). I testi sono un modello: falli verificare da un consulente legale.
 - **Indirizzo del sito**: i tag per l'anteprima social, `sitemap.xml` e `robots.txt` usano
-  `https://onit-provide.github.io/`. Se usi un dominio diverso, sostituisci questo indirizzo in tutti i file.
+  `https://onitweb.eu/`. Se cambi dominio, sostituisci questo indirizzo in tutti i file.
 - **HTTPS**: ogni pagina reindirizza automaticamente a HTTPS. Sull'hosting attiva anche il certificato:
-  GitHub Pages → Settings → Pages → *Enforce HTTPS*; Netlify lo fa da solo (`netlify.toml`);
+  GitHub Pages → Settings → Pages → *Custom domain* `onitweb.eu` e *Enforce HTTPS*; Netlify lo fa da solo (`netlify.toml`);
   sugli hosting Apache è incluso un `.htaccess` con redirect, intestazioni di sicurezza, compressione e cache.
 
 ## Anteprima in locale
