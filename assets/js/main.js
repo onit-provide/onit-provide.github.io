@@ -547,8 +547,12 @@
       return (list.reduce(function (s, r) { return s + r.voto; }, 0) / list.length).toFixed(1).replace(".", ",");
     }
 
-    if (reviews.some(function (r) { return r.esempio; })) {
-      document.getElementById("sampleNote").hidden = false;
+    // Nessuna recensione ancora: mostra la schermata "la prima recensione" al posto di medie e filtri
+    if (!reviews.length) {
+      document.getElementById("firstReview").hidden = false;
+      document.getElementById("reviewsSummary").hidden = true;
+      rToolbar.hidden = true;
+      reviewsGrid.hidden = true;
     }
 
     // Riepilogo: media generale e per ciascun piano
@@ -573,7 +577,7 @@
           '<article class="review reveal" data-delay="' + (i % 3) + '">' +
             '<div class="review-top"><span class="stars" role="img" aria-label="' + r.voto + ' stelle su 5">' + stars + '</span><span class="tag">Piano ' + esc(p.nome) + "</span></div>" +
             "<blockquote>" + esc(r.testo) + "</blockquote>" +
-            '<div class="review-author"><span class="avatar">' + esc(initials) + "</span><div><strong>" + esc(r.nome) + (r.esempio ? " (esempio)" : "") + "</strong><span>" + esc(r.attivita) + " · " + MESI[d.getMonth()] + " " + d.getFullYear() + "</span></div></div>" +
+            '<div class="review-author"><span class="avatar">' + esc(initials) + "</span><div><strong>" + esc(r.nome) + "</strong><span>" + esc(r.attivita) + " · " + MESI[d.getMonth()] + " " + d.getFullYear() + "</span></div></div>" +
           "</article>"
         ));
       });
