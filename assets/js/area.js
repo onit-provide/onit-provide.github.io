@@ -3,7 +3,7 @@ import {
   doc, getDoc, collection, getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  db, ready, currentUser, isAdmin, logout, esc, dataIt, safeUrl, erroreIt,
+  db, ready, currentUser, isAdmin, isAdminEmail, logout, esc, dataIt, safeUrl, erroreIt,
   PIANI, STATI_PIANO, FASI, notConfiguredNotice
 } from "./account.js";
 
@@ -106,6 +106,8 @@ if (!ready) {
 } else {
   currentUser().then((user) => {
     if (!user) { location.replace("accedi.html"); return; }
+    // Admin con email non ancora verificata: va al pannello, che chiede la verifica
+    if (isAdminEmail(user) && !user.emailVerified) { location.replace("admin.html"); return; }
     if (isAdmin(user)) document.getElementById("adminLink").hidden = false;
     document.querySelectorAll("[data-logout]").forEach((b) => b.addEventListener("click", logout));
     load(user).catch((err) => {
