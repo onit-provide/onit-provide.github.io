@@ -14,5 +14,9 @@ export const firebaseConfig = {
   appId: "1:968079086846:web:c1a1786de368e67b62c1af"
 };
 
+/* ID client OAuth di Google per inviare email dal Pannello admin tramite Gmail
+   (Google Cloud Console → API e servizi → Credenziali). Vuoto = invio automatico disattivato. */
+export const GOOGLE_CLIENT_ID = "";
+
 /* Indirizzo email dell'amministratore: deve coincidere con quello in firestore.rules */
 export const ADMIN_EMAIL = "onitproviderbusiness@gmail.com";

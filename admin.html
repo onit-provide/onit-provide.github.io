@@ -60,7 +60,12 @@
 
     <div id="adminGate" class="container"><p class="empty-box">Verifica dell'accesso…</p></div>
 
-    <section class="section section--light admin" id="adminApp" hidden>
+    <nav class="admin-tabs container" id="adminTabs" role="tablist" aria-label="Sezioni del pannello" hidden>
+      <button type="button" role="tab" id="tab-clienti" aria-controls="adminApp" aria-selected="true">Clienti e account</button>
+      <button type="button" role="tab" id="tab-email" aria-controls="emailApp" aria-selected="false" tabindex="-1">Email</button>
+    </nav>
+
+    <section class="section section--light admin" id="adminApp" role="tabpanel" aria-labelledby="tab-clienti" hidden>
       <div class="container admin-layout">
         <aside>
           <form class="form admin-card" id="newClientForm" novalidate>
@@ -79,6 +84,53 @@
         <div>
           <div class="form-status" id="adminToast" role="status" aria-live="polite"></div>
           <div id="clientDetail"><p class="empty-box">Seleziona un cliente dall'elenco per gestire piani e progetti.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--light admin" id="emailApp" role="tabpanel" aria-labelledby="tab-email" hidden>
+      <div class="container email-layout">
+        <form class="form admin-card" id="emailForm" novalidate>
+          <h2 class="h3">Scrivi un'email</h2>
+          <p class="gmail-status" id="gmailStatus" role="status"></p>
+
+          <label class="field"><span class="field-label">Modello</span><select name="modello"></select></label>
+          <label class="field"><span class="field-label">Destinatario da elenco clienti (facoltativo)</span><select name="cliente"><option value="">— Nuovo contatto (scrivi i dati qui sotto) —</option></select></label>
+          <label class="field"><span class="field-label">Destinatari</span><textarea name="destinatari" rows="2" placeholder="info@azienda.it — più indirizzi separati da virgola"></textarea></label>
+          <div class="form-row">
+            <label class="field"><span class="field-label">Nome referente</span><input name="referente" placeholder="es. Dott. Rossi"></label>
+            <label class="field"><span class="field-label">Azienda</span><input name="azienda" placeholder="es. Rossi Srl"></label>
+          </div>
+          <label class="field"><span class="field-label">Oggetto</span><input name="oggetto"></label>
+          <label class="field" data-solo-personalizzata><span class="field-label">Titolo nell'intestazione (facoltativo)</span><input name="titolo" placeholder="es. Il vostro sito è quasi pronto"></label>
+          <label class="field"><span class="field-label">Messaggio</span><textarea name="messaggio" rows="8" placeholder="Scrivi qui il testo dell'email."></textarea></label>
+          <p class="admin-help">Lascia una riga vuota per iniziare un nuovo paragrafo. Scrivi **così** per il grassetto. Con il modello "Presentazione" il messaggio, se presente, compare subito dopo la tua presentazione.</p>
+          <div class="form-row" data-solo-personalizzata>
+            <label class="field"><span class="field-label">Testo del pulsante (facoltativo)</span><input name="bottoneTesto" placeholder="es. Guarda l'anteprima"></label>
+            <label class="field"><span class="field-label">Link del pulsante</span><input name="bottoneLink" type="url" placeholder="https://…"></label>
+          </div>
+          <label class="field"><span class="field-label">Firma</span><input name="firma" placeholder="Il tuo nome e cognome"></label>
+
+          <div class="admin-actions">
+            <button class="btn btn--sm" type="submit" data-invio>Invia email</button>
+            <button class="btn btn--sm btn--ghost" type="button" id="sendTest" data-invio>Invia una prova a me</button>
+          </div>
+          <div class="admin-actions">
+            <button class="link-btn" type="button" id="copyHtml">Copia per Gmail</button>
+            <button class="link-btn" type="button" id="downloadHtml">Scarica HTML</button>
+          </div>
+          <div class="form-status" id="emailStatus" role="status" aria-live="polite"></div>
+        </form>
+
+        <div class="email-side">
+          <div class="email-preview">
+            <p class="preview-head" id="previewHead"></p>
+            <iframe id="emailPreview" title="Anteprima dell'email" sandbox></iframe>
+          </div>
+          <div class="admin-card" hidden>
+            <h2 class="h3">Inviate in questa sessione</h2>
+            <ul class="email-log" id="emailLog"></ul>
+          </div>
         </div>
       </div>
     </section>
