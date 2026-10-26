@@ -83,9 +83,9 @@ function corpoPresentazione(azienda) {
     "</table></td></tr>" +
     '<tr><td style="padding:24px 40px 8px 40px;">' + sezioneTitolo("I nostri piani", "Scegliete il vostro") +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">' +
-      piano("Start", "Da 80 €. Sviluppo integrale del sito, centro assistenza per qualsiasi problema e garanzia sul funzionamento. Dominio e server sono a carico del cliente.") + spazio +
-      piano("Business", "Da 200 €. Tutto di Start, più modifiche incluse e assistenza sempre attiva. Su richiesta attiviamo dominio personalizzato e server, con un canone mensile concordato insieme.", true) + spazio +
-      piano("Premium", "Da 500 €. Tutto di Business, con garanzia di 2 anni e mantenimento di dominio e server affidato a noi.") +
+      piano("Start", "Da 80 €, pagamento unico. Sviluppo integrale del sito, centro assistenza per qualsiasi problema e garanzia di 1 anno sul funzionamento. Dominio e server sono a carico del cliente.") + spazio +
+      piano("Business", "Da 200 €, pagamento unico. Tutto di Start, più modifiche incluse, assistenza sempre attiva e garanzia di 1 anno rinnovabile. Su richiesta attiviamo dominio personalizzato e server, con un canone mensile o annuale concordato insieme.", true) + spazio +
+      piano("Premium", "Da 500 €, pagamento unico. Tutto di Business, con garanzia di 2 anni e mantenimento di dominio e server affidato a noi; il loro costo segue l'accordo preso insieme.") +
     "</table>" +
     '<p style="margin:14px 0 0 0;' + FONT + 'font-size:14px;line-height:21px;color:#4a4a4a;">Per ogni piano prepariamo un <strong style="color:#000000;">preventivo personalizzato entro 24 ore lavorative</strong>. Il pagamento avviene solo dopo l\'approvazione della proposta.</p>' +
     "</td></tr>" +
@@ -175,7 +175,7 @@ export function creaTesto(d) {
   if (d.messaggio) righe.push(String(d.messaggio).replace(/\*\*(.+?)\*\*/g, "$1").trim(), "");
   if (d.modello === "presentazione") {
     righe.push("Realizziamo siti su misura, perfetti su ogni schermo, facili da trovare su Google e con assistenza continua.",
-      "Piani: Start da 80 € (sviluppo, assistenza e garanzia), Business da 200 € (in più modifiche, assistenza sempre attiva, dominio e server con canone mensile), Premium da 500 € (in più garanzia di 2 anni e mantenimento di dominio e server).", "",
+      "Piani: Start da 80 € (sviluppo, assistenza e garanzia di 1 anno), Business da 200 € (in più modifiche, assistenza sempre attiva, dominio e server con canone mensile o annuale), Premium da 500 € (in più garanzia di 2 anni e mantenimento di dominio e server).", "",
       "Prenota un incontro gratuito: " + SITE + "?tipo=incontro#prenota", "");
   } else if (d.bottoneTesto && safeUrl(d.bottoneLink)) {
     righe.push(d.bottoneTesto + ": " + safeUrl(d.bottoneLink), "");

@@ -935,6 +935,8 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .price-amount span { font-family: var(--font-display); font-weight: 700; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
 .price-card--featured .price-amount span { color: var(--grey-light); }
 .price-amount strong { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.6rem, 5vw, 3.2rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.price-once { margin: -8px 0 0; font-family: var(--font-display); font-weight: 700; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.price-card--featured .price-once { color: var(--grey-light); }
 .price-lead { margin: 0; color: #333; }
 .price-card--featured .price-lead { color: #dcdcdc; }
 .price-who { margin: 0; padding: 10px 12px; background: var(--paper); font-size: .92rem; }

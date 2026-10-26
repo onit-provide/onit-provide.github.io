@@ -71,7 +71,7 @@ export function logout() {
 /* ---- Utilità di presentazione -------------------------------------------- */
 
 export const PIANI = {
-  start: { nome: "Start", descrizione: "Sviluppo, assistenza e garanzia" },
+  start: { nome: "Start", descrizione: "Sviluppo, assistenza e garanzia di 1 anno" },
   business: { nome: "Business", descrizione: "Modifiche, assistenza sempre attiva, dominio e server" },
   premium: { nome: "Premium", descrizione: "Garanzia 2 anni e mantenimento di dominio e server" }
 };

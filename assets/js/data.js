@@ -17,7 +17,7 @@ window.ONIT = {
 
   /* Piani del servizio. "id" collega i piani alle recensioni. */
   piani: [
-    { id: "start", nome: "Start", descrizione: "Sviluppo, assistenza e garanzia" },
+    { id: "start", nome: "Start", descrizione: "Sviluppo, assistenza e garanzia di 1 anno" },
     { id: "business", nome: "Business", descrizione: "Modifiche, assistenza sempre attiva, dominio e server" },
     { id: "premium", nome: "Premium", descrizione: "Garanzia 2 anni e mantenimento di dominio e server" }
   ],
