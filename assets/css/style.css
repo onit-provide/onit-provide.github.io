@@ -912,3 +912,145 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .email-log li.is-error span { color: #a00; }
 .project-help { justify-self: start; padding: 6px 0; color: var(--white); }
 .gmail-hint { flex-basis: 100%; font-size: .85rem; color: #4a4a4a; }
+
+/* --------------------------------------------------------------------------
+   Piani e prezzi (Home)
+   -------------------------------------------------------------------------- */
+.pricing { display: grid; gap: 22px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 980px) { .pricing { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.price-card {
+  position: relative; min-width: 0; display: grid; gap: 18px; padding: 32px 26px 26px;
+  border: 2px solid var(--black); background: var(--white); color: var(--black);
+  transition: transform .5s var(--ease-out), box-shadow .5s var(--ease-out);
+}
+.price-card:hover { transform: translateY(-6px); box-shadow: 10px 10px 0 var(--black); }
+.price-card--featured { background: var(--black); color: var(--white); }
+.price-card--featured:hover { box-shadow: 10px 10px 0 var(--grey-light); }
+.price-tag {
+  position: absolute; top: -14px; left: 24px; background: var(--white); color: var(--black); border: 2px solid var(--black);
+  padding: 2px 12px; font-family: var(--font-display); font-weight: 800; font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+}
+.price-name { font-size: 1.9rem; text-transform: uppercase; letter-spacing: -0.03em; }
+.price-amount { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.price-amount span { font-family: var(--font-display); font-weight: 700; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.price-card--featured .price-amount span { color: var(--grey-light); }
+.price-amount strong { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.6rem, 5vw, 3.2rem); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.price-once { margin: -8px 0 0; font-family: var(--font-display); font-weight: 700; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: #4a4a4a; }
+.price-card--featured .price-once { color: var(--grey-light); }
+.price-lead { margin: 0; color: #333; }
+.price-card--featured .price-lead { color: #dcdcdc; }
+.price-who { margin: 0; padding: 10px 12px; background: var(--paper); font-size: .92rem; }
+.price-card--featured .price-who { background: #1b1b1b; color: #e6e6e6; }
+
+.price-drop { border-top: 1.5px solid currentColor; }
+.price-drop-btn {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; padding: 8px 0 0;
+  background: none; border: 0; color: inherit; cursor: pointer; text-align: left;
+  font-family: var(--font-display); font-weight: 800; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase;
+}
+.price-chev { font-size: 1.2rem; transition: transform .45s var(--ease); }
+.price-drop-btn[aria-expanded="true"] .price-chev { transform: rotate(180deg); }
+.price-drop-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--ease); }
+.price-drop-body.is-open { grid-template-rows: 1fr; }
+.price-drop-inner { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility 0s .5s; }
+.price-drop-body.is-open .price-drop-inner { visibility: visible; transition-delay: 0s; }
+.svc-group { margin: 12px 0 6px; font-family: var(--font-display); font-weight: 800; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: #4a4a4a; }
+.price-card--featured .svc-group { color: var(--grey-light); }
+.svc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.svc { border: 1px solid #d4d4d1; }
+.price-card--featured .svc { border-color: #3a3a3a; }
+.svc-btn {
+  width: 100%; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 52px; padding: 6px 10px;
+  background: none; border: 0; color: inherit; cursor: pointer; text-align: left; font-size: .95rem; font-weight: 500;
+}
+/* Icone dei servizi: a linea, nel colore del testo della scheda (nero o bianco) */
+.svc-ico {
+  width: 40px; height: 40px; display: grid; place-items: center; border: 1.5px solid currentColor;
+  transition: background .35s var(--ease), color .35s var(--ease);
+}
+.svc-ico .ico { overflow: visible; }
+.svc-ico .ico, .svc-ico .ico * { transform-box: fill-box; transform-origin: center; }
+.svc.is-open .svc-ico { background: var(--black); color: var(--white); }
+.price-card--featured .svc.is-open .svc-ico { background: var(--white); color: var(--black); }
+.svc--no .svc-ico { border-style: dashed; }
+/* Le icone compaiono una dopo l'altra quando si apre "Cosa include" */
+.price-drop-body.is-open .svc-ico { animation: icoIn .5s var(--ease-out) both; }
+.svc-list .svc:nth-child(2) .svc-ico { animation-delay: .05s; }
+.svc-list .svc:nth-child(3) .svc-ico { animation-delay: .1s; }
+.svc-list .svc:nth-child(4) .svc-ico { animation-delay: .15s; }
+.svc-list .svc:nth-child(5) .svc-ico { animation-delay: .2s; }
+@keyframes icoIn { from { transform: scale(.6); } to { transform: none; } }
+/* Animazione propria di ogni icona: al passaggio del mouse, con la tastiera e all'apertura */
+.svc-btn:is(:hover, :focus-visible) .ico, .svc.is-open .ico { --play: 1; }
+.svc-btn:is(:hover, :focus-visible) [data-a="code"] .b-l, .svc.is-open [data-a="code"] .b-l { animation: icoLeft .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="code"] .b-r, .svc.is-open [data-a="code"] .b-r { animation: icoRight .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="tilt"], .svc.is-open [data-a="tilt"] { animation: icoTilt .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="mail"] .flap, .svc.is-open [data-a="mail"] .flap { animation: icoFlap .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="turn"], .svc.is-open [data-a="turn"] { animation: icoTurn .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="check"] .chk, .svc.is-open [data-a="check"] .chk { stroke-dasharray: 12; animation: icoDraw .6s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="write"], .svc.is-open [data-a="write"] { animation: icoWrite .8s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="ring"], .svc.is-open [data-a="ring"] { transform-origin: 50% 10%; animation: icoRing .8s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="globe"] .mer, .svc.is-open [data-a="globe"] .mer { animation: icoGlobe 1s var(--ease); }
+.svc-btn:is(:hover, :focus-visible) [data-a="leds"] .led, .svc.is-open [data-a="leds"] .led { animation: icoBlink .9s steps(2, jump-none) 2; }
+.svc-btn:is(:hover, :focus-visible) [data-a="leds"] .led-2, .svc.is-open [data-a="leds"] .led-2 { animation-delay: .2s; }
+.svc-btn:is(:hover, :focus-visible) [data-a="hop"], .svc.is-open [data-a="hop"] { animation: icoHop .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="spin"], .svc.is-open [data-a="spin"] { animation: icoSpin .9s var(--ease); }
+.svc.is-open .svc-note [data-a="slide"] .strip { animation: icoStrip .8s var(--ease-out); }
+@keyframes icoLeft { 40% { transform: translateX(-2px); } }
+@keyframes icoRight { 40% { transform: translateX(2px); } }
+@keyframes icoTilt { 30% { transform: rotate(-12deg); } 65% { transform: rotate(8deg); } }
+@keyframes icoFlap { 40% { transform: translateY(2.5px); } }
+@keyframes icoTurn { 40% { transform: rotate(-25deg); } 70% { transform: rotate(8deg); } }
+@keyframes icoDraw { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }
+@keyframes icoWrite { 25% { transform: translate(-1.5px, 1.5px) rotate(-6deg); } 50% { transform: translate(1.5px, -1px) rotate(4deg); } 75% { transform: translate(-1px, 1px); } }
+@keyframes icoRing { 15% { transform: rotate(14deg); } 35% { transform: rotate(-12deg); } 55% { transform: rotate(8deg); } 75% { transform: rotate(-4deg); } }
+@keyframes icoGlobe { 50% { transform: scaleX(.15); } }
+@keyframes icoBlink { 50% { opacity: .15; } }
+@keyframes icoHop { 35% { transform: translateY(-4px); } 60% { transform: translateY(0); } 78% { transform: translateY(-1.5px); } }
+@keyframes icoSpin { to { transform: rotate(360deg); } }
+@keyframes icoStrip { from { transform: scaleX(0); } to { transform: none; } }
+.svc-label { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.svc-badge { padding: 1px 6px; border: 1.5px solid currentColor; font-family: var(--font-display); font-weight: 800; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+.svc-plus { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; transition: transform .4s var(--ease); }
+.svc.is-open .svc-plus { transform: rotate(45deg); }
+.svc--no .svc-btn { color: #595959; }
+.svc--no .svc-name { text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.svc-info { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); }
+.svc.is-open .svc-info { grid-template-rows: 1fr; }
+.svc-info > div { min-height: 0; overflow: hidden; }
+.svc-info p { margin: 0; padding: 0 12px 12px 64px; font-size: .9rem; color: #4a4a4a; }
+.price-card--featured .svc-info p { color: #d0d0d0; }
+@media (max-width: 420px) { .svc-info p { padding-left: 12px; } }
+
+/* Riquadro "Pagamento mensile" per dominio e server del piano Business */
+.svc-note {
+  display: flex; gap: 12px; align-items: flex-start; margin: 0 12px 12px; padding: 12px 14px;
+  background: var(--white); color: var(--black); border-left: 4px solid var(--grey-light);
+  font-size: .88rem; line-height: 1.5;
+}
+.svc-note strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 2px; }
+.svc-note-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border: 1.5px solid var(--black); }
+.svc-note-icon .ico * { transform-box: fill-box; transform-origin: left center; }
+.svc.is-open .svc-note { animation: noteIn .5s var(--ease-out); }
+@keyframes noteIn { from { transform: translateY(6px); } to { transform: none; } }
+
+/* Confronto tra i piani */
+.cmp-title { margin: clamp(48px, 7vw, 72px) 0 18px; font-size: clamp(1.5rem, 3.4vw, 2.2rem); text-transform: uppercase; letter-spacing: -0.03em; }
+.cmp-wrap { position: relative; overflow-x: auto; border: 2px solid var(--black); }
+.cmp { width: 100%; min-width: 640px; border-collapse: collapse; font-size: .95rem; }
+.cmp th, .cmp td { padding: 12px 14px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+.cmp th:first-child, .cmp td:first-child { text-align: left; }
+.cmp tbody th { font-weight: 500; }
+.cmp-label { display: inline-flex; align-items: center; gap: 10px; }
+.cmp-label .ico { flex: none; }
+.cmp thead th { font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; background: var(--paper); }
+.cmp thead th.cmp-feat { background: var(--black); color: var(--white); }
+.cmp td.cmp-feat { background: #f7f7f5; font-weight: 600; }
+.cmp-yes { color: #1a7f37; font-weight: 700; }
+.cmp-no { color: #b42318; font-weight: 700; }
+.cmp-note { color: #4a4a4a; font-size: .82rem; font-weight: 500; }
+.cmp-foot { margin: 14px 0 0; font-size: .9rem; color: #4a4a4a; max-width: 80ch; }
+.price-card .btn { width: 100%; }
+.price-card--featured .btn { background: var(--white); color: var(--black); border-color: var(--white); }
+.price-card--featured .btn::before { background: var(--black); }
+.price-card--featured .btn:hover { color: var(--white); }

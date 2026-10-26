@@ -599,5 +599,45 @@
     renderReviews("tutti");
   }
 
+  /* ------------------------------------------------------------------------
+     Piani: menu "Cosa include", voci espandibili e prezzi animati
+     ------------------------------------------------------------------------ */
+  var pricing = document.querySelector(".pricing");
+  if (pricing) {
+    pricing.addEventListener("click", function (e) {
+      var drop = e.target.closest(".price-drop-btn");
+      if (drop) {
+        var open = drop.getAttribute("aria-expanded") !== "true";
+        drop.setAttribute("aria-expanded", String(open));
+        document.getElementById(drop.getAttribute("aria-controls")).classList.toggle("is-open", open);
+        return;
+      }
+      var svc = e.target.closest(".svc-btn");
+      if (svc) {
+        var item = svc.closest(".svc");
+        var isOpen = !item.classList.contains("is-open");
+        item.classList.toggle("is-open", isOpen);
+        svc.setAttribute("aria-expanded", String(isOpen));
+      }
+    });
+
+    // I prezzi sono già scritti nella pagina; quando la sezione compare "contano" fino al valore
+    if (!reduceMotion && "IntersectionObserver" in window) {
+      var countObs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          countObs.unobserve(en.target);
+          var el = en.target, to = +el.getAttribute("data-count"), t0 = performance.now();
+          (function step(t) {
+            var k = Math.min(1, (t - t0) / 900);
+            el.textContent = Math.round(to * (0.5 + 0.5 * (1 - Math.pow(1 - k, 3)))) + "\u00a0€";
+            if (k < 1) requestAnimationFrame(step);
+          })(t0);
+        });
+      }, { threshold: 0.6 });
+      pricing.querySelectorAll("[data-count]").forEach(function (n) { countObs.observe(n); });
+    }
+  }
+
   observeReveals();
 })();

@@ -17,9 +17,9 @@ window.ONIT = {
 
   /* Piani del servizio. "id" collega i piani alle recensioni. */
   piani: [
-    { id: "start", nome: "Start", descrizione: "Sito vetrina" },
-    { id: "business", nome: "Business", descrizione: "Sito aziendale completo" },
-    { id: "premium", nome: "Premium", descrizione: "Sito su misura con funzioni avanzate" }
+    { id: "start", nome: "Start", descrizione: "Sviluppo, assistenza e garanzia di 1 anno" },
+    { id: "business", nome: "Business", descrizione: "Modifiche, assistenza sempre attiva, dominio e server" },
+    { id: "premium", nome: "Premium", descrizione: "Garanzia 2 anni e mantenimento di dominio e server" }
   ],
 
   /* --------------------------------------------------------------------
@@ -28,6 +28,19 @@ window.ONIT = {
      categoria: "lancio" | "nuova-sezione" | "aggiornamento" | "correzione"
      -------------------------------------------------------------------- */
   news: [
+    {
+      data: "2026-10-26",
+      categoria: "nuova-sezione",
+      titolo: "Nuova sezione Piani, con prezzi e dettagli",
+      testo: "Nella Home trovi ora i tre piani ON.IT con il prezzo di partenza, cosa include ciascuno e una tabella per confrontarli a colpo d'occhio.",
+      punti: [
+        "Start da 80 €, Business da 200 €, Premium da 500 €, con pagamento unico",
+        "Menu \"Cosa include\" con la spiegazione di ogni servizio e icone animate",
+        "Garanzia di 1 anno per Start e Business (rinnovabile per Business) e di 2 anni per Premium",
+        "Dominio e server, se li attiviamo noi, si pagano a parte ogni mese o ogni anno, secondo l'accordo",
+        "Tabella di confronto tra i piani, comoda anche da smartphone"
+      ]
+    },
     {
       data: "2026-10-24",
       categoria: "aggiornamento",

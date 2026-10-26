@@ -71,9 +71,9 @@ export function logout() {
 /* ---- Utilità di presentazione -------------------------------------------- */
 
 export const PIANI = {
-  start: { nome: "Start", descrizione: "Sito vetrina" },
-  business: { nome: "Business", descrizione: "Sito aziendale completo" },
-  premium: { nome: "Premium", descrizione: "Sito su misura con funzioni avanzate" }
+  start: { nome: "Start", descrizione: "Sviluppo, assistenza e garanzia di 1 anno" },
+  business: { nome: "Business", descrizione: "Modifiche, assistenza sempre attiva, dominio e server" },
+  premium: { nome: "Premium", descrizione: "Garanzia 2 anni e mantenimento di dominio e server" }
 };
 export const STATI_PIANO = { attivo: "Attivo", "in-attivazione": "In attivazione", sospeso: "Sospeso", scaduto: "Scaduto" };
 export const FASI = ["Incontro", "Proposta", "Realizzazione", "Revisione", "Online"];
