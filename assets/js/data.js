@@ -29,6 +29,19 @@ window.ONIT = {
      -------------------------------------------------------------------- */
   news: [
     {
+      data: "2026-10-26",
+      categoria: "nuova-sezione",
+      titolo: "Nuova sezione Piani, con prezzi e dettagli",
+      testo: "Nella Home trovi ora i tre piani ON.IT con il prezzo di partenza, cosa include ciascuno e una tabella per confrontarli a colpo d'occhio.",
+      punti: [
+        "Start da 80 €, Business da 200 €, Premium da 500 €, con pagamento unico",
+        "Menu \"Cosa include\" con la spiegazione di ogni servizio e icone animate",
+        "Garanzia di 1 anno per Start e Business (rinnovabile per Business) e di 2 anni per Premium",
+        "Dominio e server, se li attiviamo noi, si pagano a parte ogni mese o ogni anno, secondo l'accordo",
+        "Tabella di confronto tra i piani, comoda anche da smartphone"
+      ]
+    },
+    {
       data: "2026-10-24",
       categoria: "aggiornamento",
       titolo: "Il nostro nuovo indirizzo: onitweb.eu",
