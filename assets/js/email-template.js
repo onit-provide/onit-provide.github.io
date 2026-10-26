@@ -6,7 +6,9 @@
    ========================================================================== */
 
 export const SITE = "https://onitweb.eu/";
-const LOGO = SITE + "assets/img/logo-white.png";
+/* Logo bianco su riquadro nero incluso nell'immagine: resta leggibile anche quando
+   la modalità scura di Gmail inverte i colori dell'email (le immagini non vengono invertite) */
+const LOGO = SITE + "assets/img/logo-email.png";
 const EMAIL = "info@onitweb.eu";
 export const EMAIL_ASSISTENZA = "help@onitweb.eu";
 
@@ -34,6 +36,9 @@ function safeUrl(u) {
 const FONT = "font-family:Arial,Helvetica,sans-serif;";
 const BLACK_FONT = "font-family:'Arial Black',Arial,Helvetica,sans-serif;";
 const P = 'style="margin:0 0 18px 0;' + FONT + 'font-size:16px;line-height:26px;color:#1a1a1a;"';
+
+/* Gmail trasforma "ON.IT" in un link (sembra un sito .it): un carattere invisibile tra "ON" e "." lo evita */
+const nonLink = (html) => html.replace(/ON\.IT/g, "ON&#8204;.IT");
 
 /* Testo libero → paragrafi HTML. Riga vuota = nuovo paragrafo, a capo = <br>, **testo** = grassetto */
 export function testoInHtml(testo) {
@@ -118,14 +123,14 @@ export function creaEmail(d) {
     ? "Se non desiderate ricevere altre comunicazioni da ON.IT, rispondete con &laquo;CANCELLA&raquo; e non vi scriveremo più."
     : "Questa email vi è stata inviata da ON.IT in merito ai nostri servizi. Per non ricevere altre comunicazioni rispondete con &laquo;CANCELLA&raquo;.";
 
-  return '<!doctype html>\n<html lang="it">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="color-scheme" content="light">\n<title>' + esc(d.oggetto || "ON.IT") + "</title>\n</head>\n" +
+  return nonLink('<!doctype html>\n<html lang="it">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="color-scheme" content="light only">\n<meta name="supported-color-schemes" content="light">\n<title>' + esc(d.oggetto || "ON.IT") + "</title>\n</head>\n" +
   '<body style="margin:0;padding:0;background-color:#e9e9e7;">\n' +
   '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#e9e9e7;"><tr><td align="center" style="padding:24px 12px;">' +
   '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background-color:#ffffff;border-collapse:collapse;">' +
 
   // Intestazione con logo
   '<tr><td bgcolor="#000000" style="background-color:#000000;padding:36px 40px 32px 40px;">' +
-    '<a href="' + SITE + '" target="_blank" style="text-decoration:none;"><img src="' + LOGO + '" width="150" height="44" alt="ON.IT" style="display:block;width:150px;height:auto;border:0;outline:none;color:#ffffff;' + FONT + 'font-size:32px;font-weight:900;"></a>' +
+    '<a href="' + SITE + '" target="_blank" style="text-decoration:none;"><img src="' + LOGO + '" width="172" height="66" alt="ON.IT" style="display:block;width:172px;height:auto;border:0;outline:none;color:#ffffff;' + FONT + 'font-size:32px;font-weight:900;"></a>' +
     '<p style="margin:' + (titolo ? "34px" : "24px") + ' 0 0 0;' + FONT + 'font-size:11px;line-height:16px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#bdbdbd;">' + eyebrow + "</p>" +
     (titolo ? '<h1 style="margin:12px 0 0 0;' + BLACK_FONT + 'font-size:34px;line-height:38px;font-weight:900;letter-spacing:-1px;text-transform:uppercase;color:#ffffff;">' + titolo + "</h1>" : "") +
   "</td></tr>" +
@@ -147,8 +152,8 @@ export function creaEmail(d) {
       (assistenza ? "" : '<span style="color:#4a4a4a;">Assistenza: </span><a href="mailto:' + EMAIL_ASSISTENZA + '" style="color:#000000;text-decoration:underline;">' + EMAIL_ASSISTENZA + "</a><br>") +
       '<a href="' + SITE + '" target="_blank" style="color:#000000;text-decoration:underline;">onitweb.eu</a>' +
     "</td>" +
-    '<td width="110" valign="bottom" align="right" style="padding-top:22px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#000000" style="background-color:#000000;padding:12px 14px;">' +
-      '<img src="' + LOGO + '" width="80" height="24" alt="ON.IT" style="display:block;width:80px;height:auto;border:0;color:#ffffff;' + FONT + 'font-size:16px;font-weight:900;">' +
+    '<td width="110" valign="bottom" align="right" style="padding-top:22px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td>' +
+      '<img src="' + LOGO + '" width="104" height="40" alt="ON.IT" style="display:block;width:104px;height:auto;border:0;color:#ffffff;' + FONT + 'font-size:16px;font-weight:900;">' +
     "</td></tr></table></td>" +
     "</tr></table>" +
   "</td></tr>" +
@@ -158,7 +163,7 @@ export function creaEmail(d) {
     piede + ' Il trattamento dei dati è descritto nella nostra <a href="' + SITE + 'privacy.html" target="_blank" style="color:#ffffff;text-decoration:underline;">privacy policy</a>.' +
   "</td></tr>" +
 
-  "</table></td></tr></table>\n</body>\n</html>\n";
+  "</table></td></tr></table>\n</body>\n</html>\n");
 }
 
 /* Versione solo testo (per i programmi che non mostrano l'HTML e per i filtri antispam) */
