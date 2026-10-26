@@ -961,11 +961,52 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   width: 100%; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 52px; padding: 6px 10px;
   background: none; border: 0; color: inherit; cursor: pointer; text-align: left; font-size: .95rem; font-weight: 500;
 }
-.svc-emoji { width: 40px; height: 40px; display: grid; place-items: center; font-size: 1.35rem; line-height: 1; background: var(--paper); transition: transform .4s var(--ease-out); }
-.price-card--featured .svc-emoji { background: #1b1b1b; }
-.svc-btn:hover .svc-emoji, .svc-btn:focus-visible .svc-emoji { animation: svcWiggle .6s var(--ease-out); }
-.svc.is-open .svc-emoji { transform: scale(1.12); }
-@keyframes svcWiggle { 0% { transform: rotate(0) scale(1); } 30% { transform: rotate(-12deg) scale(1.18); } 60% { transform: rotate(10deg) scale(1.12); } 100% { transform: rotate(0) scale(1); } }
+/* Icone dei servizi: a linea, nel colore del testo della scheda (nero o bianco) */
+.svc-ico {
+  width: 40px; height: 40px; display: grid; place-items: center; border: 1.5px solid currentColor;
+  transition: background .35s var(--ease), color .35s var(--ease);
+}
+.svc-ico .ico { overflow: visible; }
+.svc-ico .ico, .svc-ico .ico * { transform-box: fill-box; transform-origin: center; }
+.svc.is-open .svc-ico { background: var(--black); color: var(--white); }
+.price-card--featured .svc.is-open .svc-ico { background: var(--white); color: var(--black); }
+.svc--no .svc-ico { border-style: dashed; }
+/* Le icone compaiono una dopo l'altra quando si apre "Cosa include" */
+.price-drop-body.is-open .svc-ico { animation: icoIn .5s var(--ease-out) both; }
+.svc-list .svc:nth-child(2) .svc-ico { animation-delay: .05s; }
+.svc-list .svc:nth-child(3) .svc-ico { animation-delay: .1s; }
+.svc-list .svc:nth-child(4) .svc-ico { animation-delay: .15s; }
+.svc-list .svc:nth-child(5) .svc-ico { animation-delay: .2s; }
+@keyframes icoIn { from { transform: scale(.6); } to { transform: none; } }
+/* Animazione propria di ogni icona: al passaggio del mouse, con la tastiera e all'apertura */
+.svc-btn:is(:hover, :focus-visible) .ico, .svc.is-open .ico { --play: 1; }
+.svc-btn:is(:hover, :focus-visible) [data-a="code"] .b-l, .svc.is-open [data-a="code"] .b-l { animation: icoLeft .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="code"] .b-r, .svc.is-open [data-a="code"] .b-r { animation: icoRight .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="tilt"], .svc.is-open [data-a="tilt"] { animation: icoTilt .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="mail"] .flap, .svc.is-open [data-a="mail"] .flap { animation: icoFlap .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="turn"], .svc.is-open [data-a="turn"] { animation: icoTurn .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="check"] .chk, .svc.is-open [data-a="check"] .chk { stroke-dasharray: 12; animation: icoDraw .6s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="write"], .svc.is-open [data-a="write"] { animation: icoWrite .8s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="ring"], .svc.is-open [data-a="ring"] { transform-origin: 50% 10%; animation: icoRing .8s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="globe"] .mer, .svc.is-open [data-a="globe"] .mer { animation: icoGlobe 1s var(--ease); }
+.svc-btn:is(:hover, :focus-visible) [data-a="leds"] .led, .svc.is-open [data-a="leds"] .led { animation: icoBlink .9s steps(2, jump-none) 2; }
+.svc-btn:is(:hover, :focus-visible) [data-a="leds"] .led-2, .svc.is-open [data-a="leds"] .led-2 { animation-delay: .2s; }
+.svc-btn:is(:hover, :focus-visible) [data-a="hop"], .svc.is-open [data-a="hop"] { animation: icoHop .7s var(--ease-out); }
+.svc-btn:is(:hover, :focus-visible) [data-a="spin"], .svc.is-open [data-a="spin"] { animation: icoSpin .9s var(--ease); }
+.svc.is-open .svc-note [data-a="slide"] .strip { animation: icoStrip .8s var(--ease-out); }
+@keyframes icoLeft { 40% { transform: translateX(-2px); } }
+@keyframes icoRight { 40% { transform: translateX(2px); } }
+@keyframes icoTilt { 30% { transform: rotate(-12deg); } 65% { transform: rotate(8deg); } }
+@keyframes icoFlap { 40% { transform: translateY(2.5px); } }
+@keyframes icoTurn { 40% { transform: rotate(-25deg); } 70% { transform: rotate(8deg); } }
+@keyframes icoDraw { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }
+@keyframes icoWrite { 25% { transform: translate(-1.5px, 1.5px) rotate(-6deg); } 50% { transform: translate(1.5px, -1px) rotate(4deg); } 75% { transform: translate(-1px, 1px); } }
+@keyframes icoRing { 15% { transform: rotate(14deg); } 35% { transform: rotate(-12deg); } 55% { transform: rotate(8deg); } 75% { transform: rotate(-4deg); } }
+@keyframes icoGlobe { 50% { transform: scaleX(.15); } }
+@keyframes icoBlink { 50% { opacity: .15; } }
+@keyframes icoHop { 35% { transform: translateY(-4px); } 60% { transform: translateY(0); } 78% { transform: translateY(-1.5px); } }
+@keyframes icoSpin { to { transform: rotate(360deg); } }
+@keyframes icoStrip { from { transform: scaleX(0); } to { transform: none; } }
 .svc-label { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .svc-badge { padding: 1px 6px; border: 1.5px solid currentColor; font-family: var(--font-display); font-weight: 800; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
 .svc-plus { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; transition: transform .4s var(--ease); }
@@ -986,7 +1027,8 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   font-size: .88rem; line-height: 1.5;
 }
 .svc-note strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 2px; }
-.svc-note-icon { font-size: 1.3rem; line-height: 1; }
+.svc-note-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border: 1.5px solid var(--black); }
+.svc-note-icon .ico * { transform-box: fill-box; transform-origin: left center; }
 .svc.is-open .svc-note { animation: noteIn .5s var(--ease-out); }
 @keyframes noteIn { from { transform: translateY(6px); } to { transform: none; } }
 
@@ -997,6 +1039,8 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .cmp th, .cmp td { padding: 12px 14px; text-align: center; border-bottom: 1px solid #e0e0e0; }
 .cmp th:first-child, .cmp td:first-child { text-align: left; }
 .cmp tbody th { font-weight: 500; }
+.cmp-label { display: inline-flex; align-items: center; gap: 10px; }
+.cmp-label .ico { flex: none; }
 .cmp thead th { font-family: var(--font-display); font-weight: 800; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; background: var(--paper); }
 .cmp thead th.cmp-feat { background: var(--black); color: var(--white); }
 .cmp td.cmp-feat { background: #f7f7f5; font-weight: 600; }
