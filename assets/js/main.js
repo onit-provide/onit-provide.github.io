@@ -50,6 +50,12 @@
           '<a href="recensioni.html"' + cur("recensioni") + ">Recensioni</a>" +
           '<a href="' + bookHref + '" class="nav-book">Contatti</a>' +
           '<a href="accedi.html"' + (["accedi", "area", "admin"].indexOf(page) > -1 ? ' aria-current="page"' : "") + ">Area clienti</a>" +
+          // parte bassa del menu da telefono: contatti e prenotazione
+          '<div class="nav-extra">' +
+            '<a class="nav-mail" data-href="email" href="#"><span data-contact="email"></span></a>' +
+            '<a class="nav-mail" data-href="email-assistenza" href="#"><span data-contact="email-assistenza"></span></a>' +
+            '<a class="btn nav-cta" href="' + bookHref + '">Prenota un incontro <span class="arrow">→</span></a>' +
+          "</div>" +
         "</nav>" +
         '<div class="header-tools">' +
           '<div class="lang notranslate" title="Traduci il sito">' +
@@ -153,7 +159,13 @@
     toggle.setAttribute("aria-label", "Apri il menu");
   }
   toggle.addEventListener("click", function () {
+    // il menu si apre come un cerchio che parte dal pulsante
+    var r = toggle.getBoundingClientRect();
+    var nav = document.getElementById("nav");
+    nav.style.setProperty("--mx", Math.round(r.left + r.width / 2) + "px");
+    nav.style.setProperty("--my", Math.round(r.top + r.height / 2) + "px");
     var open = document.body.classList.toggle("menu-open");
+    if (window.ONITFX) { window.ONITFX.ripple(r.left + r.width / 2, r.top + r.height / 2, 1); window.ONITFX.pulse(.2); }
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
   });
@@ -605,6 +617,10 @@
      ------------------------------------------------------------------------ */
   var pricing = document.querySelector(".pricing");
   if (pricing) {
+    // ordine di entrata delle voci nei menu "Cosa include"
+    pricing.querySelectorAll(".price-drop-inner").forEach(function (box) {
+      box.querySelectorAll(".svc-group, .svc").forEach(function (n, i) { n.style.setProperty("--i", i); });
+    });
     pricing.addEventListener("click", function (e) {
       var drop = e.target.closest(".price-drop-btn");
       if (drop) {

@@ -178,9 +178,12 @@
       U[n] = gl.getUniformLocation(prog, n);
     });
 
-    var S = window.innerWidth < 700 ? .5 : (DPR > 1 ? .6 : .5);   // risoluzione del liquido rispetto ai pixel CSS
+    // risoluzione del liquido rispetto ai pixel CSS: alta sugli schermi nitidi,
+    // poi si abbassa da sola se il dispositivo fatica
+    var S = still ? .45 : finePointer ? Math.min(1, Math.max(.6, DPR * .5)) : Math.min(.85, Math.max(.5, DPR * .42));
     var MARGIN = 160, EXT = 26;
     var items = [], lost = false;
+    function setScale(ns) { S = ns; sizeGL(); items.forEach(function (it) { it.w = 0; }); layout(); }
 
     function sizeGL() {
       glc.width = Math.ceil(window.innerWidth * S);
@@ -190,6 +193,15 @@
 
     var hosts = [].slice.call(doc.querySelectorAll(".hero, .page-hero, main > section, .notfound, .auth-page, .site-footer"))
       .filter(function (el, i, a) { return a.indexOf(el) === i; });
+
+    // Menu da telefono: liquido dietro le voci quando è aperto
+    var nav = doc.getElementById("nav");
+    if (nav) {
+      var nc = doc.createElement("canvas");
+      nc.className = "fx-liq";
+      nc.setAttribute("aria-hidden", "true");
+      nav.insertBefore(nc, nav.firstChild);
+    }
 
     hosts.forEach(function (el) {
       var c = doc.createElement("canvas");
@@ -206,11 +218,17 @@
       });
     });
 
+    if (nav) items.push({
+      el: nav, c: nc, ctx: nc.getContext("2d"), tone: 0, inten: 1, fixed: true,
+      active: function () { return doc.body.classList.contains("menu-open"); },
+      prev: null, ext: 0, w: 0, h: 0, visible: false, drawn: false
+    });
+
     function layout() {
       items.forEach(function (it, i) {
-        var r = it.el.getBoundingClientRect(), p = items[i - 1];
+        var r = it.el.getBoundingClientRect(), p = it.fixed ? null : items[i - 1];
         it.prev = null; it.ext = 0;
-        if (p) {
+        if (p && !p.fixed) {
           var pr = p.el.getBoundingClientRect();
           if (Math.abs(pr.bottom - r.top) < 2) { it.prev = p; it.ext = EXT; }
         }
@@ -276,23 +294,38 @@
       it.ctx.drawImage(glc, 0, glc.height - hs, glc.width, hs, 0, Math.round(y0 * S), it.c.width, hs);
     }
 
-    var frame = 0, lastY = -1, lastPX = 0, lastPY = 0;
-    FX.addTick(function (t) {
+    var frame = 0, lastY = -1, lastPX = 0, lastPY = 0, slow = 1 / 60, checkAt = 150;
+    FX.addTick(function (t, dt) {
       if (lost) return;
       frame++;
+      // qualità adattiva: se i fotogrammi rallentano, il liquido scende di risoluzione
+      if (!still) {
+        slow = slow * .95 + dt * .05;
+        if (frame > checkAt && slow > 1 / 38) {
+          if (S > .45) setScale(Math.max(.4, S * .75));
+          else { still = true; items.forEach(function (it) { it.drawn = false; }); }
+          slow = 1 / 60; checkAt = frame + 120;
+        }
+      }
       var y = window.scrollY, p = FX.pointer;
       var busy = y !== lastY || p.x !== lastPX || p.y !== lastPY || FX.ripples.length || FX.flash > .01;
       lastY = y; lastPX = p.x; lastPY = p.y;
       var vh = window.innerHeight;
       for (var i = 0; i < items.length; i++) {
         var it = items[i];
-        if (!it.visible) continue;
+        if (it.active ? !it.active() : !it.visible) continue;
         if (still) {
-          // Versione leggera: un'immagine ferma, disegnata una volta sola
-          if (it.drawn) continue;
-          var rt = it.el.getBoundingClientRect().top;
-          for (var a = 0; a < it.h; a += vh + MARGIN * 2) renderSlice(it, rt, a, Math.min(it.h, a + vh + MARGIN * 2), t);
-          it.drawn = true;
+          // Versione leggera: un'immagine ferma, disegnata solo nelle parti
+          // che arrivano sullo schermo e mai due volte
+          if (!it.drawn) { it.d0 = 0; it.d1 = 0; it.drawn = true; }
+          var sr = it.el.getBoundingClientRect(), st0 = sr.top - it.ext;
+          var s0 = Math.max(0, -st0 - MARGIN), s1 = Math.min(it.h, vh - st0 + MARGIN);
+          if (s1 <= s0 || (s0 >= it.d0 && s1 <= it.d1)) continue;
+          if (it.d1 > it.d0 && s0 < it.d1 && s1 > it.d1) s0 = it.d1;          // solo la parte nuova sotto
+          else if (it.d1 > it.d0 && s1 > it.d0 && s0 < it.d0) s1 = it.d0;     // solo la parte nuova sopra
+          renderSlice(it, sr.top, s0, s1, t);
+          it.d0 = it.d1 > it.d0 ? Math.min(it.d0, s0) : s0;
+          it.d1 = Math.max(it.d1, s1);
           continue;
         }
         if (!busy && frame % 2) continue;   // a riposo basta mezza frequenza
@@ -652,7 +685,7 @@
   if (!reduce) {
     var brandImg = doc.querySelector(".site-header .brand img");
     if (brandImg) {
-      var brand = Dissolve(brandImg, brandImg.closest(".brand"), { max: 1600 });
+      var brand = Dissolve(brandImg, brandImg.closest(".brand"), { max: 2600 });
       var first = false;
       try { first = !sessionStorage.getItem("onit-fx-intro"); sessionStorage.setItem("onit-fx-intro", "1"); } catch (err) {}
       if (first) setTimeout(brand.intro, 450);
