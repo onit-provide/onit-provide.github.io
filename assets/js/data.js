@@ -29,6 +29,19 @@ window.ONIT = {
      -------------------------------------------------------------------- */
   news: [
     {
+      data: "2026-11-09",
+      categoria: "aggiornamento",
+      titolo: "Un nuovo look, più dinamico",
+      testo: "Abbiamo rinnovato l'aspetto del sito, sempre in bianco e nero: ora è più vivo e reagisce a quello che fai.",
+      punti: [
+        "Logo che si dissolve in particelle al passaggio del mouse e si ricompone subito dopo",
+        "Sfondo liquido in movimento, che cambia tonalità quando scorri, clicchi o compili il modulo",
+        "Modelli 3D interattivi: una goccia di metallo liquido nella Home e portatile, tablet e smartphone da ruotare",
+        "Scritta ON.IT a particelle in fondo a ogni pagina, pulsanti magnetici e nuovi effetti di luce",
+        "Versione leggera automatica per i dispositivi meno potenti e per chi preferisce meno animazioni"
+      ]
+    },
+    {
       data: "2026-10-26",
       categoria: "nuova-sezione",
       titolo: "Nuova sezione Piani, con prezzi e dettagli",
