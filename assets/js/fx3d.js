@@ -82,7 +82,7 @@ function ndc(el, x, y) {
    ------------------------------------------------------------------------ */
 function Blob(el, FX) {
   const mobile = window.innerWidth < 760;
-  const st = stage(el, { antialias: !mobile, maxDpr: mobile ? 1.5 : 1.75 });
+  const st = stage(el, { antialias: true, maxDpr: 2 });
   const { renderer } = st;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
@@ -146,7 +146,7 @@ function Blob(el, FX) {
         gl_FragColor=vec4(vec3(c),1.);
       }`
   });
-  const blob = new THREE.Mesh(new THREE.IcosahedronGeometry(1.25, mobile ? 30 : 56), blobMat);
+  const blob = new THREE.Mesh(new THREE.IcosahedronGeometry(1.25, mobile ? 40 : 64), blobMat);
   group.add(blob);
 
   // Nube di particelle attorno alla goccia
@@ -444,7 +444,7 @@ function drawSite(ctx, W, H, mode, logo) {
 
 function Devices(el, FX) {
   const mobile = window.innerWidth < 760;
-  const st = stage(el, { antialias: true, maxDpr: mobile ? 1.75 : 2 });
+  const st = stage(el, { antialias: true, maxDpr: 2 });
   const { renderer } = st;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
@@ -475,11 +475,13 @@ function Devices(el, FX) {
   logo.src = "assets/img/logo-white.png";
   const screens = [];
   function screen(mode, w, h, visW, visH, totalH) {
+    // su computer le pagine sugli schermi sono disegnate più grandi, per testi nitidi
+    const f = mobile ? 1 : Math.min(1.3, 4096 / totalH);
     const c = document.createElement("canvas");
-    c.width = visW; c.height = totalH;
+    c.width = Math.round(visW * f); c.height = Math.round(totalH * f);
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 4;
+    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     tex.repeat.set(1, visH / totalH);
     tex.offset.set(0, 1 - visH / totalH);
     const mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });

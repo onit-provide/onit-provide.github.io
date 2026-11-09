@@ -171,6 +171,8 @@ h1, h2, h3, h4 {
 .brand:hover img { transform: scale(1.04); }
 
 .nav { display: flex; align-items: center; gap: 6px; }
+.nav-extra { display: none; }
+.nav > .fx-liq { display: none; }
 .nav a {
   position: relative;
   font-family: var(--font-display); font-weight: 700; font-size: .82rem;
@@ -667,16 +669,54 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 @media (max-width: 899px) {
   .menu-toggle { display: block; }
   .header-tools .btn { display: none; }
+  /* Menu da telefono: si apre come un cerchio che parte dal pulsante,
+     con sfondo liquido e voci che salgono una dopo l'altra */
   .nav {
     position: fixed; inset: 0; z-index: -1; background: var(--black);
-    flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px;
-    padding: 0 var(--gutter);
-    clip-path: inset(0 0 100% 0); transition: clip-path .7s var(--ease);
+    flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px;
+    padding: calc(var(--header-h) + 24px) var(--gutter) 32px;
+    counter-reset: navi;
+    clip-path: circle(0 at var(--mx, calc(100% - 40px)) var(--my, 38px));
+    visibility: hidden;
+    transition: clip-path .8s var(--ease), visibility 0s .8s;
   }
-  .nav a { font-size: clamp(2.2rem, 11vw, 3.4rem); font-weight: 900; letter-spacing: -0.03em; padding: 6px 0; }
-  .nav a::after { left: 0; right: auto; width: 60px; bottom: 0; height: 3px; }
-  .menu-open .nav { clip-path: inset(0 0 0 0); }
+  .menu-open .nav { clip-path: circle(150vmax at var(--mx, calc(100% - 40px)) var(--my, 38px)); visibility: visible; transition-delay: 0s; }
   .menu-open { overflow: hidden; }
+  /* con il menu aperto la barra non deve "intrappolare" il pannello fisso */
+  .menu-open .site-header { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: transparent; }
+
+  .nav > a {
+    display: flex; align-items: baseline; gap: 14px;
+    font-size: clamp(2.2rem, 11vw, 3.4rem); font-weight: 900; letter-spacing: -0.03em; padding: 4px 0;
+    counter-increment: navi;
+    opacity: 0; transform: translateY(60%) rotate(3deg); transform-origin: left bottom;
+    transition: transform .5s var(--ease), opacity .3s, color .3s, translate .4s var(--ease-out);
+  }
+  .nav > a::before {
+    content: "0" counter(navi) / "";
+    font-size: .8rem; font-weight: 800; letter-spacing: .2em; color: var(--grey-light);
+    transform: translateY(-1.4em);
+  }
+  .nav > a::after { left: 44px; right: auto; width: 60px; bottom: 0; height: 3px; }
+  .menu-open .nav > a { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .6s var(--ease-out), color .3s, translate .4s var(--ease-out); }
+  .menu-open .nav > a:nth-of-type(1) { transition-delay: .18s, .18s, 0s, 0s; }
+  .menu-open .nav > a:nth-of-type(2) { transition-delay: .24s, .24s, 0s, 0s; }
+  .menu-open .nav > a:nth-of-type(3) { transition-delay: .30s, .30s, 0s, 0s; }
+  .menu-open .nav > a:nth-of-type(4) { transition-delay: .36s, .36s, 0s, 0s; }
+  .menu-open .nav > a:nth-of-type(5) { transition-delay: .42s, .42s, 0s, 0s; }
+  .nav > a:active, .nav > a:hover, .nav > a:focus-visible { translate: 12px 0; }
+  .nav:has(> a:hover) > a:not(:hover) { color: #8a8a8a; }
+
+  .nav-extra {
+    display: grid; gap: 6px; width: 100%; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line);
+    opacity: 0; transform: translateY(20px); transition: opacity .3s, transform .5s var(--ease);
+  }
+  .menu-open .nav-extra { opacity: 1; transform: none; transition: opacity .6s var(--ease-out) .5s, transform .8s var(--ease-out) .5s; }
+  .nav-extra .nav-mail { font-family: var(--font-body); font-size: 1rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--grey-light); padding: 6px 0; word-break: break-word; }
+  .nav-extra .nav-mail:hover { color: var(--white); }
+  .nav-extra .nav-cta { margin-top: 14px; width: 100%; }
+  .nav-extra a::after { display: none; }
+  .nav > .fx-liq { display: block; }
   .scroll-cue { display: none; }
   .fab { display: inline-flex; }
   .lang select, .lang .goog-te-combo { max-width: 92px; }
@@ -1153,3 +1193,50 @@ body .fx-spot.fx-spot {
   box-shadow: inset 0 0 0 .5px var(--line);
 }
 .fx-liquid .service:hover { background-color: rgba(18, 18, 18, .62); }
+
+/* --------------------------------------------------------------------------
+   Rifiniture: tipografia, titoli che si svelano, menu "Cosa include"
+   -------------------------------------------------------------------------- */
+body { text-rendering: optimizeLegibility; font-kerning: normal; }
+h1, h2, h3, .display, .h2 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+
+/* I titoli delle sezioni si svelano dal basso quando compaiono */
+.js .reveal .h2 { clip-path: inset(0 -5% 100% -5%); transition: clip-path 1.2s var(--ease-out) .12s; }
+.js .reveal.is-visible .h2 { clip-path: inset(-10% -5% -20% -5%); }
+
+/* "Cosa include": linea che si disegna, freccia elastica, voci che entrano una dopo l'altra */
+.price-drop-btn { position: relative; }
+.price-drop-btn::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease);
+}
+.price-drop-btn:hover::after, .price-drop-btn:focus-visible::after, .price-drop-btn[aria-expanded="true"]::after { transform: scaleX(1); }
+.price-chev { display: inline-block; transition: transform .7s cubic-bezier(.34, 1.56, .64, 1); }
+.price-drop-btn:hover .price-chev { transform: translateY(2px); }
+.price-drop-btn[aria-expanded="true"] .price-chev { transform: rotate(180deg); }
+.price-drop-body.is-open .svc-group,
+.price-drop-body.is-open .svc { animation: svcIn .65s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 50ms + 120ms); }
+@keyframes svcIn {
+  from { opacity: 0; transform: translateY(18px) scale(.97); clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+
+/* Voce del menu: fascia che si riempie al passaggio, barra laterale quando è aperta */
+.svc { position: relative; transition: border-color .35s var(--ease), background-color .35s var(--ease); }
+.svc::before {
+  content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px; background: currentColor;
+  transform: scaleY(0); transform-origin: top; transition: transform .55s var(--ease); z-index: 1;
+}
+.svc.is-open::before { transform: scaleY(1); }
+.svc.is-open { border-color: currentColor; }
+.svc-btn { position: relative; isolation: isolate; overflow: hidden; }
+.svc-btn::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: .06;
+  transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease);
+}
+.svc-btn:hover::after, .svc-btn:focus-visible::after { transform: scaleX(1); }
+.svc-plus { display: inline-block; transition: transform .6s cubic-bezier(.34, 1.56, .64, 1); }
+.svc.is-open .svc-plus { transform: rotate(135deg); }
+.svc.is-open .svc-info p { animation: infoIn .55s var(--ease-out) both .1s; }
+@keyframes infoIn { from { opacity: 0; transform: translateY(-8px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
