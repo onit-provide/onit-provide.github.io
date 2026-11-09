@@ -1054,3 +1054,102 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
 .price-card--featured .btn { background: var(--white); color: var(--black); border-color: var(--white); }
 .price-card--featured .btn::before { background: var(--black); }
 .price-card--featured .btn:hover { color: var(--white); }
+
+/* ==========================================================================
+   Effetti (assets/js/fx.js e fx3d.js)
+   Sfondo liquido, logo a particelle, cursore, modelli 3D.
+   ========================================================================== */
+
+/* Sfondo liquido: una tela dietro ai contenuti di ogni sezione */
+.fx-liq-host { position: relative; isolation: isolate; }
+.fx-liq {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  z-index: -1; display: block; pointer-events: none;
+}
+
+/* Logo che si dissolve in particelle */
+.fx-dissolve { position: relative; display: inline-block; vertical-align: top; line-height: 0; }
+.fx-dissolve-cvs { position: absolute; display: none; pointer-events: none; z-index: 2; }
+
+/* Scritta finale a particelle */
+.fx-wordmark { margin-top: 56px; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.fx-wordmark canvas { display: block; width: 100%; }
+
+/* Cursore che inverte i colori sotto di sé */
+.fx-cursor {
+  position: fixed; left: 0; top: 0; z-index: 400; width: 0; height: 0;
+  pointer-events: none; opacity: 0; transition: opacity .3s; mix-blend-mode: difference;
+}
+.fx-cursor.is-on { opacity: 1; }
+.fx-cursor span {
+  position: absolute; left: -16px; top: -16px; width: 32px; height: 32px; border-radius: 50%;
+  background: #fff; transform: scale(.4);
+  transition: transform .4s var(--ease-out), border-radius .3s var(--ease-out);
+}
+.fx-cursor.is-hover span { transform: scale(1.7); }
+.fx-cursor.is-big span { transform: scale(2.8); }
+.fx-cursor.is-text span { transform: scale(.14, .9); border-radius: 2px; }
+.fx-cursor.is-down span { transform: scale(.3); }
+html[data-fx-mood="calm"] .fx-cursor span { transform: scale(.25); }
+html[data-fx-mood="energy"] .progress { height: 3px; }
+
+/* Pulsanti magnetici */
+.btn { transition: color .45s var(--ease), translate .35s var(--ease-out); }
+
+/* Schede che si inclinano e luce che segue il puntatore */
+.js .fx-tilt.is-visible, .fx-tilt:not(.reveal) {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+}
+.fx-tilt.is-tilting { transition: transform .2s ease-out, color .55s var(--ease), background-color .5s var(--ease); }
+body .fx-spot.fx-spot {
+  background-image: radial-gradient(380px circle at var(--gx, -999px) var(--gy, -999px), var(--spot, rgba(255, 255, 255, .08)), transparent 65%);
+}
+.section--light .fx-spot, .price-card, .review { --spot: rgba(0, 0, 0, .06); }
+.price-card--featured { --spot: rgba(255, 255, 255, .1); }
+
+/* Goccia 3D nell'intestazione */
+.hero-3d {
+  position: absolute; z-index: 0; right: -7vw; top: 52%;
+  width: min(52vw, 760px); aspect-ratio: 1; translate: 0 -50%;
+  pointer-events: none;
+}
+.hero-3d canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 1.6s var(--ease-out); }
+.hero-3d.is-ready canvas { opacity: 1; }
+.hero-3d.is-unsupported { display: none; }
+.fx-3d-hero .hero .display, .fx-3d-hero .hero .eyebrow { mix-blend-mode: difference; }
+.fx-dragging, .fx-dragging * { cursor: grabbing !important; user-select: none !important; -webkit-user-select: none !important; }
+@media (max-width: 759px) {
+  .hero-3d { right: -18vw; top: calc(var(--header-h) - 52px); translate: 0 0; width: 76vw; }
+}
+
+/* Vetrina 3D dei dispositivi */
+.showcase { display: grid; gap: 28px; align-items: center; margin-top: clamp(72px, 10vw, 140px); }
+@media (min-width: 960px) { .showcase { grid-template-columns: .8fr 1.2fr; gap: 48px; } }
+.showcase-title { margin: 18px 0 22px; }
+.showcase-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+.showcase-controls[hidden] { display: none; }
+.showcase-hint { flex-basis: 100%; margin: 0 0 8px; color: var(--grey-light); }
+.showcase-stage {
+  position: relative; aspect-ratio: 4 / 3; min-height: 280px;
+  touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.showcase-stage:active { cursor: grabbing; }
+.showcase-stage.is-hover { cursor: pointer; }
+.showcase-stage canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity 1s var(--ease-out); }
+.showcase-stage.is-ready canvas { opacity: 1; }
+.showcase-stage::after {
+  content: ""; position: absolute; left: 20%; right: 20%; top: 50%; height: 1px; background: var(--line-strong);
+  transform-origin: left; animation: stageLoad 1.6s var(--ease) infinite;
+}
+.showcase-stage.is-ready::after, .showcase-stage.is-unsupported::after { display: none; }
+.showcase-stage.is-unsupported { display: none; }
+@media (max-width: 759px) { .showcase-stage { aspect-ratio: 5 / 4; margin: 0 calc(var(--gutter) * -1); } }
+@keyframes stageLoad { 0% { transform: scaleX(0); } 50% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: 0; } }
+
+/* Con lo sfondo liquido le schede del servizio diventano di vetro scuro */
+.fx-liquid .service-grid { background: none; gap: 0; }
+.fx-liquid .service {
+  background-color: rgba(0, 0, 0, .42);
+  box-shadow: inset 0 0 0 .5px var(--line);
+}
+.fx-liquid .service:hover { background-color: rgba(18, 18, 18, .62); }
