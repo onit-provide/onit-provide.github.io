@@ -459,6 +459,7 @@
         .then(function () {
           form.reset();
           syncTipo();
+          document.dispatchEvent(new CustomEvent("onit:form-success", { detail: { button: btn } }));
           showStatus("Grazie! Abbiamo ricevuto la tua richiesta. Ti ricontatteremo entro 24 ore lavorative per confermare.");
         })
         .catch(function () {

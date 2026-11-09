@@ -36,6 +36,7 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="assets/js/data.js" defer></script>
   <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/fx.js" defer></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"ProfessionalService","name":"ON.IT","description":"Realizzazione di siti web su misura per attività e professionisti","url":"https://onitweb.eu/","logo":"https://onitweb.eu/assets/img/icon-512.png","image":"https://onitweb.eu/assets/img/og-image.jpg","email":"info@onitweb.eu","areaServed":"IT"}
   </script>
@@ -47,6 +48,7 @@
     <!-- HERO -->
     <section class="hero">
       <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-3d" data-3d="blob" aria-hidden="true"></div>
       <span class="scroll-cue" aria-hidden="true" data-nosnippet>Scorri</span>
       <div class="container">
         <span class="eyebrow">Web agency · Siti su misura</span>
@@ -107,7 +109,7 @@
     </section>
 
     <!-- SERVIZIO -->
-    <section class="section" id="servizio">
+    <section class="section" id="servizio" data-fx-int="0.7">
       <div class="container">
         <div class="section-head">
           <div class="reveal">
@@ -139,11 +141,26 @@
             <p>Dopo la pubblicazione restiamo al tuo fianco per aggiornamenti, modifiche e supporto tecnico.</p>
           </div>
         </div>
+
+        <div class="showcase">
+          <div class="showcase-text reveal">
+            <span class="eyebrow">Su ogni schermo</span>
+            <h3 class="h2 showcase-title">Un sito.<br><span class="outline-text">Ogni schermo.</span></h3>
+            <p class="lead">Ogni pagina che realizziamo è pensata per computer, tablet e smartphone, perché i tuoi clienti ti cercano ovunque.</p>
+            <div class="showcase-controls" role="group" aria-label="Anima i dispositivi" hidden>
+              <p class="showcase-hint">Provalo tu: trascina i dispositivi per ruotarli e toccali per vederli in azione.</p>
+              <button type="button" class="filter-btn" data-device="laptop">Chiudi il portatile</button>
+              <button type="button" class="filter-btn" data-device="tablet">Ruota il tablet</button>
+              <button type="button" class="filter-btn" data-device="phone">Gira lo smartphone</button>
+            </div>
+          </div>
+          <div class="showcase-stage reveal" data-delay="1" data-3d="devices" aria-hidden="true"></div>
+        </div>
       </div>
     </section>
 
     <!-- PROCESSO -->
-    <section class="section" id="metodo" style="padding-top: 0">
+    <section class="section" id="metodo" style="padding-top: 0" data-fx-int="0.7">
       <div class="container">
         <div class="section-head">
           <div class="reveal">
