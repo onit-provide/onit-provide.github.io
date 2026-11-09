@@ -493,6 +493,36 @@ function Devices(el, FX) {
     return { mesh, s };
   }
 
+  // Schermo che ruota come su un dispositivo vero: dopo la rotazione il
+  // contenuto gira di 90° e passa alla versione orizzontale del sito
+  function rotScreen(inner, W, H, z, portrait, landscape) {
+    const p = screen(portrait[0], W, H, portrait[1], portrait[2], portrait[3]);
+    const l = screen(landscape[0], H, W, landscape[1], landscape[2], landscape[3]);
+    const pp = new THREE.Group(), pl = new THREE.Group();
+    pp.position.z = z; pl.position.z = z + 0.002;
+    pp.add(p.mesh); pl.add(l.mesh);
+    [p, l].forEach((x) => { x.s.mat.transparent = true; x.s.mat.depthWrite = false; });
+    l.s.mat.opacity = 0; l.mesh.visible = false;
+    inner.add(pp, pl);
+    return { W, H, pp, pl, p: p.s, l: l.s, pm: p.mesh, lm: l.mesh, c: 0 };
+  }
+  // scala che tiene un rettangolo w×h, ruotato di a, dentro lo schermo W×H
+  function fit(w, h, W, H, a) {
+    const c = Math.abs(Math.cos(a)), s = Math.abs(Math.sin(a));
+    return Math.min(1, W / (w * c + h * s), H / (w * s + h * c));
+  }
+  function turnScreen(rs, land, landT, dt) {
+    // il contenuto parte quando il dispositivo ha quasi finito di ruotare
+    if (Math.abs(land - landT) < 0.3) rs.c = damp(rs.c, landT, 6, dt);
+    const a = rs.c * Math.PI / 2;
+    rs.pp.rotation.z = -a; rs.pl.rotation.z = -a;
+    rs.pp.scale.setScalar(fit(rs.W, rs.H, rs.W, rs.H, a));
+    rs.pl.scale.setScalar(fit(rs.H, rs.W, rs.W, rs.H, a));
+    const k = Math.min(1, Math.max(0, (rs.c - 0.3) / 0.4));
+    rs.p.mat.opacity = 1 - k; rs.l.mat.opacity = k;
+    rs.pm.visible = k < 1; rs.lm.visible = k > 0;
+  }
+
   const shadowTex = (() => {
     const c = document.createElement("canvas"); c.width = c.height = 128;
     const x = c.getContext("2d");
@@ -541,7 +571,7 @@ function Devices(el, FX) {
     g.add(glow(4.4, 3.2));
     g.position.set(0, 0, -0.5);
     world.add(g);
-    devices.laptop = { g, lid, open: 1, openT: 1, lift: 0, liftT: 0, screen: scr.s, home: g.position.clone(), hopT: 0 };
+    devices.laptop = { g, lid, open: 1, openT: 1, lift: 0, liftT: 0, screens: [scr.s] };
   }
 
   // Tablet
@@ -550,9 +580,7 @@ function Devices(el, FX) {
     const inner = new THREE.Group();
     const body = new THREE.Mesh(roundedBox(1.55, 2.1, 0.07, 0.12), graphite);
     inner.add(body);
-    const scr = screen("tab", 1.42, 1.96, 768, 1060, 2900);
-    scr.mesh.position.z = 0.05;
-    inner.add(scr.mesh);
+    const rs = rotScreen(inner, 1.42, 1.96, 0.05, ["tab", 768, 1060, 2900], ["desk", 1060, 768, 2400]);
     inner.position.y = 1.08;
     inner.rotation.x = -0.12;
     g.add(inner);
@@ -560,7 +588,7 @@ function Devices(el, FX) {
     g.position.set(mobile ? -2.05 : -2.55, 0, mobile ? 1.2 : 0.75);
     g.rotation.y = 0.5;
     world.add(g);
-    devices.tablet = { g, inner, land: 0, landT: 0, lift: 0, liftT: 0, screen: scr.s, home: g.position.clone() };
+    devices.tablet = { g, inner, rs, homeX: g.position.x, land: 0, landT: 0, lift: 0, liftT: 0, screens: [rs.p, rs.l] };
   }
 
   // Smartphone
@@ -571,9 +599,7 @@ function Devices(el, FX) {
     inner.add(body);
     const frame = new THREE.Mesh(roundedBox(0.8, 1.62, 0.05, 0.13), silver);
     inner.add(frame);
-    const scr = screen("phone", 0.7, 1.5, 400, 866, 3600);
-    scr.mesh.position.z = 0.056;
-    inner.add(scr.mesh);
+    const rs = rotScreen(inner, 0.7, 1.5, 0.056, ["phone", 400, 866, 3600], ["desk", 866, 404, 2300]);
     const cam = new THREE.Mesh(new THREE.CircleGeometry(0.022, 16), new THREE.MeshBasicMaterial({ color: 0x000000 }));
     cam.position.set(0, 0.69, 0.058);
     inner.add(cam);
@@ -584,7 +610,7 @@ function Devices(el, FX) {
     g.position.set(mobile ? 1.95 : 2.45, 0, mobile ? 1.5 : 0.95);
     g.rotation.y = -0.5;
     world.add(g);
-    devices.phone = { g, inner, spin: 0, spinT: 0, lift: 0, liftT: 0, screen: scr.s, home: g.position.clone() };
+    devices.phone = { g, inner, rs, land: 0, landT: 0, lift: 0, liftT: 0, screens: [rs.p, rs.l] };
   }
 
   Object.keys(devices).forEach((name) => devices[name].g.traverse((o) => { o.userData.device = name; }));
@@ -593,9 +619,8 @@ function Devices(el, FX) {
     const d = devices[name];
     if (!d) return;
     if (name === "laptop") d.openT = d.openT > 0.5 ? 0 : 1;
-    if (name === "tablet") d.landT = d.landT > 0.5 ? 0 : 1;
-    if (name === "phone") d.spinT += Math.PI * 2;
-    d.screen.bright = 1.6;
+    if (name === "tablet" || name === "phone") d.landT = d.landT > 0.5 ? 0 : 1;
+    d.screens.forEach((s) => { s.bright = 1.6; });
     d.hop = 1;
     FX.pulse(0.2);
     syncButtons();
@@ -607,6 +632,7 @@ function Devices(el, FX) {
       const n = b.getAttribute("data-device");
       if (n === "laptop") b.textContent = devices.laptop.openT > 0.5 ? "Chiudi il portatile" : "Apri il portatile";
       if (n === "tablet") b.textContent = devices.tablet.landT > 0.5 ? "Raddrizza il tablet" : "Ruota il tablet";
+      if (n === "phone") b.textContent = devices.phone.landT > 0.5 ? "Raddrizza lo smartphone" : "Ruota lo smartphone";
     });
   }
   buttons.forEach((b) => b.addEventListener("click", () => act(b.getAttribute("data-device"))));
@@ -692,14 +718,15 @@ function Devices(el, FX) {
       const bob = FX.reduce ? 0 : Math.sin(t * 1.1 + i * 1.7) * 0.045;
       if (entered) d.g.position.y = d.lift + bob + Math.sin((1 - d.hop) * Math.PI) * d.hop * 0.4;
       // la pagina scorre lentamente sugli schermi
-      const sc = d.screen;
-      if (!FX.reduce) {
-        sc.phase += dt * 0.09;
-        const k = 0.5 - 0.5 * Math.cos(sc.phase);
-        sc.tex.offset.y = (1 - sc.rep) * (1 - k);
-      }
-      sc.bright = damp(sc.bright, 1, 3, dt);
-      sc.mat.color.setScalar(Math.min(1, 0.82 + (sc.bright - 1) * 0.5 + (hovered === n ? 0.18 : 0)));
+      d.screens.forEach((sc) => {
+        if (!FX.reduce) {
+          sc.phase += dt * 0.09;
+          const k = 0.5 - 0.5 * Math.cos(sc.phase);
+          sc.tex.offset.y = (1 - sc.rep) * (1 - k);
+        }
+        sc.bright = damp(sc.bright, 1, 3, dt);
+        sc.mat.color.setScalar(Math.min(1, 0.82 + (sc.bright - 1) * 0.5 + (hovered === n ? 0.18 : 0)));
+      });
     });
 
     const L = devices.laptop;
@@ -710,10 +737,14 @@ function Devices(el, FX) {
     T.land = damp(T.land, T.landT, 5, dt);
     T.inner.rotation.z = T.land * Math.PI / 2;
     T.inner.position.y = 1.08 - T.land * 0.3;
+    T.g.position.x = T.homeX + T.land * 0.4;   // in orizzontale è più largo: si avvicina al centro
+    turnScreen(T.rs, T.land, T.landT, dt);
 
     const P = devices.phone;
-    P.spin = damp(P.spin, P.spinT, 4, dt);
-    P.inner.rotation.y = P.spin;
+    P.land = damp(P.land, P.landT, 5, dt);
+    P.inner.rotation.z = P.land * Math.PI / 2;
+    P.inner.position.y = 0.84 - P.land * 0.36;
+    turnScreen(P.rs, P.land, P.landT, dt);
 
     renderer.render(scene, camera);
   });
