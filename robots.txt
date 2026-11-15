@@ -2,7 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /404.html
 Disallow: /email/
-Disallow: /area.html
-Disallow: /admin.html
 
 Sitemap: https://onitweb.eu/sitemap.xml

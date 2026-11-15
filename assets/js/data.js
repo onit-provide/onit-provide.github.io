@@ -6,7 +6,7 @@
 window.ONIT = {
   contatti: {
     /* Numero temporaneamente nascosto: lasciato vuoto, il telefono sparisce da tutto il sito.
-       Per rimetterlo: telefono: "+39 351 418 5569", telefonoLink: "+393514185569" */
+       Per rimetterlo scrivi qui il numero (telefono: come si legge, telefonoLink: solo + e cifre). */
     telefono: "",
     telefonoLink: "",
     email: "info@onitweb.eu",

@@ -10,11 +10,17 @@
   "use strict";
 
   var doc = document, root = doc.documentElement;
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Meno movimento: impostazione del dispositivo oppure scelta fatta nel piè di pagina
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches || root.classList.contains("fx-reduce");
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var DPR = Math.min(window.devicePixelRatio || 1, 2);
   // ?fx=full forza gli effetti completi (utile per le prove)
   var forceFull = /[?&]fx=full\b/.test(location.search);
+  // Numero di versione di questo file (?v=…): lo ereditano i moduli 3D caricati dopo
+  var VER = ((doc.currentScript && doc.currentScript.src || "").match(/\?v=\d+/) || [""])[0];
+  // Prima pagina aperta in questa scheda: l'animazione d'entrata completa si vede una volta sola
+  var firstVisit = false;
+  try { firstVisit = !sessionStorage.getItem("onit-fx-intro"); sessionStorage.setItem("onit-fx-intro", "1"); } catch (err) {}
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function now() { return performance.now() / 1000; }
@@ -25,6 +31,8 @@
      ------------------------------------------------------------------------ */
   var FX = window.ONITFX = {
     reduce: reduce,
+    firstVisit: firstVisit,
+    version: VER,
     lite: reduce,   // versione leggera: liquido fermo e niente 3D (movimento ridotto o grafica senza GPU)
     finePointer: finePointer,
     pointer: { x: -9999, y: -9999, active: false },
@@ -152,7 +160,8 @@
     var gl = glc.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: "low-power" });
     if (!gl) return null;
     // Senza accelerazione grafica (o su dispositivi molto deboli) il liquido resta fermo
-    var info = gl.getExtension("WEBGL_debug_renderer_info");
+    // (Firefox dà già il nome della scheda con RENDERER e sconsiglia l'estensione)
+    var info = /Firefox\//.test(navigator.userAgent) ? null : gl.getExtension("WEBGL_debug_renderer_info");
     var gpu = String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || "");
     if (!forceFull && (/swiftshader|llvmpipe|software|basic render/i.test(gpu) || (navigator.hardwareConcurrency || 4) <= 2)) FX.lite = true;
     var still = FX.lite;
@@ -668,10 +677,12 @@
       if (started) return;
       started = true;
       ["pointermove", "scroll", "touchstart", "keydown"].forEach(function (ev) { window.removeEventListener(ev, go); });
-      import("./fx3d.js").then(function (m) { m.init(FX); }).catch(function () {
+      import("./fx3d.js" + VER).then(function (m) { m.init(FX); }).catch(function () {
         stages.forEach(function (s) { s.classList.add("is-unsupported"); });
       });
     }
+    // L'animazione d'entrata parte appena possibile; gli altri modelli alla prima interazione
+    if (doc.querySelector('[data-3d="keys"]')) { go(); return; }
     ["pointermove", "scroll", "touchstart", "keydown"].forEach(function (ev) { window.addEventListener(ev, go, { passive: true, once: true }); });
     var later = function () { setTimeout(go, 2500); };
     if (doc.readyState === "complete") later(); else window.addEventListener("load", later);
@@ -686,9 +697,7 @@
     var brandImg = doc.querySelector(".site-header .brand img");
     if (brandImg) {
       var brand = Dissolve(brandImg, brandImg.closest(".brand"), { max: 2600 });
-      var first = false;
-      try { first = !sessionStorage.getItem("onit-fx-intro"); sessionStorage.setItem("onit-fx-intro", "1"); } catch (err) {}
-      if (first) setTimeout(brand.intro, 450);
+      if (firstVisit) setTimeout(brand.intro, 450);
     }
     var footLogo = doc.querySelector(".site-footer .footer-logo");
     if (footLogo && finePointer) Dissolve(footLogo, footLogo, { max: 2200 });

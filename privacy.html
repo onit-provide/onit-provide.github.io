@@ -3,43 +3,52 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>
     // Forza HTTPS (escluso l'uso in locale)
     if (location.protocol === "http:" && !/^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname)) location.replace("https:" + location.href.slice(5));
     document.documentElement.classList.add("js");
+    // Preferenza "animazioni ridotte" scelta dal visitatore nel piè di pagina
+    try { if (localStorage.getItem("onit-animazioni") === "ridotte") document.documentElement.classList.add("fx-reduce"); } catch (e) {}
   </script>
   <title>Privacy e cookie policy — ON.IT</title>
-  <meta name="description" content="Informativa privacy e cookie policy di ON.IT ai sensi del GDPR.">
+  <meta name="description" content="Come ON.IT raccoglie, usa e protegge i tuoi dati personali: informativa privacy e cookie policy ai sensi del GDPR, con i tuoi diritti.">
   <link rel="canonical" href="https://onitweb.eu/privacy.html">
   <meta name="theme-color" content="#000000">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ON.IT">
   <meta property="og:locale" content="it_IT">
   <meta property="og:title" content="Privacy e cookie policy — ON.IT">
-  <meta property="og:description" content="Informativa privacy e cookie policy di ON.IT ai sensi del GDPR.">
+  <meta property="og:description" content="Come ON.IT raccoglie, usa e protegge i tuoi dati personali: informativa privacy e cookie policy ai sensi del GDPR, con i tuoi diritti.">
   <meta property="og:url" content="https://onitweb.eu/privacy.html">
-  <meta property="og:image" content="https://onitweb.eu/assets/img/og-image.jpg">
+  <meta property="og:image" content="https://onitweb.eu/assets/img/og-image.jpg?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="ON.IT — Siti web su misura per la tua attività">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Privacy e cookie policy — ON.IT">
-  <meta name="twitter:description" content="Informativa privacy e cookie policy di ON.IT ai sensi del GDPR.">
-  <meta name="twitter:image" content="https://onitweb.eu/assets/img/og-image.jpg">
+  <meta name="twitter:description" content="Come ON.IT raccoglie, usa e protegge i tuoi dati personali: informativa privacy e cookie policy ai sensi del GDPR, con i tuoi diritti.">
+  <meta name="twitter:image" content="https://onitweb.eu/assets/img/og-image.jpg?v=2">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/montserrat-900-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/data.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
-  <script src="assets/js/fx.js" defer></script>
+  <link rel="stylesheet" href="assets/css/style.css?v=20261115">
+  <script src="assets/js/data.js?v=20261115" defer></script>
+  <script src="assets/js/main.js?v=20261115" defer></script>
+  <script src="assets/js/fx.js?v=20261115" defer></script>
 </head>
 <body data-page="privacy">
   <div data-nosnippet><a class="skip-link" href="#main">Vai al contenuto</a></div>
+  <noscript>
+    <nav class="noscript-nav" aria-label="Navigazione senza JavaScript">
+      <a href="index.html">Home</a> <a href="faq.html">Domande</a> <a href="news.html">News</a> <a href="recensioni.html">Recensioni</a> <a href="privacy.html">Privacy</a> <a href="termini.html">Termini</a>
+      <span>Per menu, modulo e area clienti attiva JavaScript. Contatti: info@onitweb.eu</span>
+    </nav>
+  </noscript>
 
   <main id="main">
     <section class="page-hero">
@@ -51,7 +60,7 @@
         </h1>
         <div class="hero-bottom">
           <p class="lead">Come ON.IT raccoglie, usa e protegge i tuoi dati personali, ai sensi del Regolamento (UE) 2016/679 (GDPR) e del D.Lgs. 196/2003.</p>
-          <p class="lead" style="max-width:none">Ultimo aggiornamento: <strong style="color:#fff">24 ottobre 2026</strong></p>
+          <p class="lead" style="max-width:none">Ultimo aggiornamento: <strong style="color:#fff">15 novembre 2026</strong></p>
         </div>
       </div>
     </section>
@@ -74,6 +83,15 @@
         </nav>
 
         <article class="legal">
+          <aside class="legal-brief" aria-label="In breve">
+            <h2>In breve</h2>
+            <ul>
+              <li>Usiamo i tuoi dati solo per risponderti e per fornirti il servizio.</li>
+              <li>Niente pubblicità, statistiche o profilazione.</li>
+              <li>Nessun servizio esterno viene attivato senza il tuo consenso.</li>
+              <li>Puoi chiederci in ogni momento di vedere, correggere o cancellare i tuoi dati: info@onitweb.eu.</li>
+            </ul>
+          </aside>
           <section id="titolare">
             <h2>1. Titolare del trattamento</h2>
             <p>Il titolare del trattamento dei dati è <strong>ON.IT</strong>.</p>
@@ -83,7 +101,7 @@
           <section id="dati">
             <h2>2. Quali dati raccogliamo</h2>
             <h3>Dati che ci fornisci tu</h3>
-            <p>Quando compili il modulo di contatto o ci scrivi via email raccogliamo: nome e cognome, nome dell'attività, indirizzo email, numero di telefono, piano di interesse, data, orario e modalità preferiti per l'incontro e il contenuto del tuo messaggio.</p>
+            <p>Quando compili il modulo di contatto o ci scrivi via email raccogliamo nome e cognome, indirizzo email e il contenuto del messaggio. Solo se li indichi tu, raccogliamo anche nome dell'attività, numero di telefono, piano di interesse e data, orario e modalità preferiti per l'incontro.</p>
             <h3>Area clienti</h3>
             <p>Se sei nostro cliente, creiamo per te un account per l'area riservata. Trattiamo il tuo nome, il nome dell'attività, l'indirizzo email, la password (conservata in forma cifrata e mai visibile a noi) e le informazioni sui piani acquistati e sui progetti in corso o completati.</p>
             <h3>Dati di navigazione</h3>
@@ -130,7 +148,8 @@
               <li>Richieste di contatto che non diventano un contratto: fino a <strong>24 mesi</strong> dall'ultimo contatto.</li>
               <li>Dati relativi a contratti e fatture: per <strong>10 anni</strong>, come previsto dalla normativa civilistica e fiscale.</li>
               <li>Account e dati dell'area clienti: per tutta la durata del rapporto e fino a 24 mesi dalla sua conclusione, salvo obblighi di legge. Puoi chiederne la cancellazione in qualsiasi momento.</li>
-              <li>Preferenza sui cookie: fino a quando non la modifichi o cancelli i dati del browser.</li>
+              <li>Preferenza sui cookie: 6 mesi, poi ti chiediamo di nuovo la scelta.</li>
+              <li>Preferenza sulle animazioni: fino a quando non la modifichi o cancelli i dati del browser.</li>
             </ul>
           </section>
 
@@ -160,7 +179,10 @@
                   <tr><th>Nome</th><th>Tipo</th><th>Fornitore</th><th>Scopo</th><th>Durata</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>onit-consenso-cookie</td><td>Necessario (archiviazione locale)</td><td>ON.IT</td><td>Ricorda la tua scelta sui cookie</td><td>Fino alla cancellazione</td></tr>
+                  <tr><td>onit-consenso-cookie</td><td>Necessario (archiviazione locale)</td><td>ON.IT</td><td>Ricorda la tua scelta sui cookie</td><td>6 mesi</td></tr>
+                  <tr><td>onit-animazioni</td><td>Necessario (archiviazione locale)</td><td>ON.IT</td><td>Ricorda se hai chiesto di ridurre le animazioni dal piè di pagina</td><td>Fino alla cancellazione</td></tr>
+                  <tr><td>onit-nav</td><td>Necessario (archiviazione di sessione)</td><td>ON.IT</td><td>Mostra la transizione quando passi da una pagina all'altra</td><td>Fino alla chiusura della scheda</td></tr>
+                  <tr><td>onit-fx-intro</td><td>Necessario (archiviazione di sessione)</td><td>ON.IT</td><td>Ricorda che hai già visto l'animazione d'entrata</td><td>Fino alla chiusura della scheda</td></tr>
                   <tr><td>Sessione di accesso (Firebase)</td><td>Necessario (archiviazione locale)</td><td>Google Firebase</td><td>Mantiene l'accesso all'area clienti. Usato solo nelle pagine Accedi e Area clienti</td><td>Fino all'uscita, o fine sessione se non scegli "Ricordami"</td></tr>
                   <tr><td>googtrans</td><td>Funzionale</td><td>Google</td><td>Ricorda la lingua scelta per la traduzione</td><td>Sessione</td></tr>
                   <tr><td>Cookie di Google Traduttore</td><td>Funzionale, di terze parti</td><td>Google</td><td>Funzionamento del servizio di traduzione automatica</td><td>Definita da Google</td></tr>
@@ -168,7 +190,7 @@
               </table>
             </div>
 
-            <p>Gli strumenti funzionali vengono attivati <strong>solo dopo il tuo consenso</strong>. Se rifiuti, il sito funziona normalmente in italiano. I caratteri tipografici sono ospitati direttamente sul nostro sito, senza contattare servizi esterni.</p>
+            <p>Gli strumenti funzionali vengono attivati <strong>solo dopo il tuo consenso</strong>. Se rifiuti, il sito funziona normalmente in italiano. I caratteri tipografici sono ospitati direttamente sul nostro sito, senza contattare servizi esterni. Animazioni e modelli 3D vengono calcolati sul tuo dispositivo: non raccolgono e non inviano dati.</p>
             <p>Per saperne di più su come Google tratta i dati puoi consultare la <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">privacy policy di Google</a>. Puoi anche cancellare o bloccare i cookie dalle impostazioni del tuo browser.</p>
           </section>
 

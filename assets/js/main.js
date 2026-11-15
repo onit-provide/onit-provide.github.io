@@ -48,6 +48,7 @@
           '<a href="index.html"' + cur("home") + ">Home</a>" +
           '<a href="news.html"' + cur("news") + ">News</a>" +
           '<a href="recensioni.html"' + cur("recensioni") + ">Recensioni</a>" +
+          '<a href="faq.html"' + cur("faq") + ">Domande</a>" +
           '<a href="' + bookHref + '" class="nav-book">Contatti</a>' +
           '<a href="accedi.html"' + (["accedi", "area", "admin"].indexOf(page) > -1 ? ' aria-current="page"' : "") + ">Area clienti</a>" +
           // parte bassa del menu da telefono: contatti e prenotazione
@@ -85,6 +86,7 @@
               '<li><a href="index.html">Home</a></li>' +
               '<li><a href="news.html">News</a></li>' +
               '<li><a href="recensioni.html">Recensioni</a></li>' +
+              '<li><a href="faq.html">Domande frequenti</a></li>' +
               '<li><a href="' + bookHref + '">Prenota un incontro</a></li>' +
               '<li><a href="accedi.html">Area clienti</a></li>' +
             "</ul>" +
@@ -105,6 +107,7 @@
               '<li><a href="privacy.html#cookie">Cookie policy</a></li>' +
               '<li><a href="termini.html">Termini e condizioni</a></li>' +
               '<li><button type="button" class="link-btn" data-cookie-open>Preferenze cookie</button></li>' +
+              '<li><button type="button" class="link-btn" id="fxToggle"></button></li>' +
             "</ul>" +
           "</div>" +
         "</div>" +
@@ -153,10 +156,15 @@
      Menu mobile, header allo scroll, barra di avanzamento
      ------------------------------------------------------------------------ */
   var toggle = document.getElementById("menuToggle");
+  // A menu aperto il resto della pagina non deve essere raggiungibile da tastiera o lettori di schermo
+  function setInert(on) {
+    document.querySelectorAll("main, .site-footer, .fab").forEach(function (n) { n.inert = on; });
+  }
   function closeMenu() {
     document.body.classList.remove("menu-open");
     toggle.setAttribute("aria-expanded", "false");
     toggle.setAttribute("aria-label", "Apri il menu");
+    setInert(false);
   }
   toggle.addEventListener("click", function () {
     // il menu si apre come un cerchio che parte dal pulsante
@@ -168,6 +176,7 @@
     if (window.ONITFX) { window.ONITFX.ripple(r.left + r.width / 2, r.top + r.height / 2, 1); window.ONITFX.pulse(.2); }
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", open ? "Chiudi il menu" : "Apri il menu");
+    setInert(open);
   });
   document.querySelectorAll("#nav a").forEach(function (a) { a.addEventListener("click", closeMenu); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
@@ -189,7 +198,23 @@
   /* ------------------------------------------------------------------------
      Transizioni: sipario d'ingresso/uscita e comparsa allo scroll
      ------------------------------------------------------------------------ */
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var FX_KEY = "onit-animazioni";
+  var systemReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduceMotion = systemReduce || document.documentElement.classList.contains("fx-reduce");
+
+  // Interruttore nel piè di pagina: la scelta resta salvata nel browser
+  var fxToggle = document.getElementById("fxToggle");
+  fxToggle.textContent = "Animazioni: " + (reduceMotion ? "ridotte" : "attive");
+  if (systemReduce) {
+    fxToggle.disabled = true;
+    fxToggle.title = "Il tuo dispositivo chiede già di ridurre le animazioni";
+  }
+  fxToggle.addEventListener("click", function () {
+    try {
+      if (reduceMotion) localStorage.removeItem(FX_KEY); else localStorage.setItem(FX_KEY, "ridotte");
+    } catch (e) { return; }
+    location.reload();
+  });
 
   requestAnimationFrame(function () { document.body.classList.add("is-loaded"); });
   window.addEventListener("pageshow", function (e) {
@@ -280,11 +305,14 @@
      ------------------------------------------------------------------------ */
   var CONSENT_KEY = "onit-consenso-cookie";
   var CONSENT_VERSION = 1;
+  var CONSENT_DAYS = 180;   // dopo 6 mesi la scelta viene chiesta di nuovo
 
   function readConsent() {
     try {
       var c = JSON.parse(localStorage.getItem(CONSENT_KEY));
-      return c && c.v === CONSENT_VERSION ? c : null;
+      if (!c || c.v !== CONSENT_VERSION) return null;
+      if (!c.data || Date.now() - new Date(c.data).getTime() > CONSENT_DAYS * 864e5) return null;
+      return c;
     } catch (e) { return null; }
   }
 
@@ -361,6 +389,19 @@
   var consent = readConsent();
   if (!consent) openBanner(false);
   else if (consent.funzionali) loadTranslate();
+
+  /* ------------------------------------------------------------------------
+     Pulsante "Mostra password" (pagina Accedi): utile quando il browser
+     compila da solo una password vecchia
+     ------------------------------------------------------------------------ */
+  document.querySelectorAll(".pw-toggle").forEach(function (b) {
+    var input = document.getElementById(b.getAttribute("aria-controls"));
+    b.addEventListener("click", function () {
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      b.setAttribute("aria-pressed", String(show));
+    });
+  });
 
   /* ------------------------------------------------------------------------
      Modulo di prenotazione

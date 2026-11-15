@@ -282,6 +282,35 @@ function initTabs() {
   if (location.hash === "#email") select(tabs[1]);
 }
 
+/* ---------------------------------------------------------------- Backup */
+
+// Scarica tutti i dati dell'area clienti in un file JSON: è l'unica copia fuori da Firebase
+document.getElementById("backupBtn").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  try {
+    const snap = await getDocs(collection(db, "clienti"));
+    const out = { creato: new Date().toISOString(), clienti: [] };
+    for (const d of snap.docs) {
+      const [piani, progetti] = await Promise.all([
+        getDocs(collection(db, "clienti", d.id, "piani")),
+        getDocs(collection(db, "clienti", d.id, "progetti"))
+      ]);
+      const righe = (s) => s.docs.map((x) => ({ id: x.id, ...x.data() }));
+      out.clienti.push({ id: d.id, ...d.data(), piani: righe(piani), progetti: righe(progetti) });
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: "application/json" }));
+    a.download = "backup-onit-" + oggi() + ".json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Backup scaricato: " + out.clienti.length + " clienti.");
+  } catch (err) {
+    toast(erroreIt(err), true);
+  }
+  btn.disabled = false;
+});
+
 /* ---------------------------------------------------------------- Avvio */
 
 if (!ready) {
