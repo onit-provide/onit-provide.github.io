@@ -653,6 +653,19 @@
       }
     }, { passive: true });
     doc.addEventListener("pointerleave", function () { resetMagnet(); resetTilt(); });
+    // I gruppi di tasti 3D nelle intestazioni si inclinano verso il puntatore
+    var clusters = doc.querySelectorAll(".keys3d");
+    if (clusters.length) doc.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      clusters.forEach(function (k) {
+        var r = k.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > window.innerHeight) return;
+        var nx = clamp((e.clientX - r.left - r.width / 2) / window.innerWidth * 2, -1, 1);
+        var ny = clamp((e.clientY - r.top - r.height / 2) / window.innerHeight * 2, -1, 1);
+        k.style.setProperty("--ry", (-18 + nx * 26).toFixed(1) + "deg");
+        k.style.setProperty("--rx", (26 - ny * 22).toFixed(1) + "deg");
+      });
+    }, { passive: true });
     doc.querySelectorAll(".action-card, .service").forEach(function (n) { n.classList.add("fx-tilt"); });
     doc.querySelectorAll(".action-card, .service, .price-card, .review, .step").forEach(function (n) { n.classList.add("fx-spot"); });
   }
@@ -706,5 +719,13 @@
   if (footer && !root.classList.contains("no-wordmark")) Wordmark(footer);
 
   if (finePointer && !reduce) { Cursor(); Pointerly(); }
+
+  // I tasti 3D si premono al tocco e al clic
+  doc.addEventListener("pointerdown", function (e) {
+    var k = e.target.closest && e.target.closest(".k3d");
+    if (!k) return;
+    k.classList.add("is-down");
+    setTimeout(function () { k.classList.remove("is-down"); }, 220);
+  }, { passive: true });
   load3D();
 })();
