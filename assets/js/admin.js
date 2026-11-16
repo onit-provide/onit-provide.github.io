@@ -303,7 +303,8 @@ document.getElementById("backupBtn").addEventListener("click", async (e) => {
     a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 2)], { type: "application/json" }));
     a.download = "backup-onit-" + oggi() + ".json";
     a.click();
-    URL.revokeObjectURL(a.href);
+    // l'indirizzo temporaneo va liberato solo a download partito (Safari altrimenti lo annulla)
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
     toast("Backup scaricato: " + out.clienti.length + " clienti.");
   } catch (err) {
     toast(erroreIt(err), true);

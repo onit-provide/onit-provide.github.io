@@ -16,7 +16,14 @@ try { ({ chromium } = require("playwright")); }
 catch (e) { ({ chromium } = require(require("child_process").execSync("npm root -g").toString().trim() + "/playwright")); }
 
 let axePath = null;
-try { axePath = require.resolve("axe-core/axe.min.js"); } catch (e) { /* facoltativo */ }
+try { axePath = require.resolve("axe-core/axe.min.js"); }
+catch (e) {
+  // installato con "npm i -g": lo si cerca nella cartella globale; se manca, la prova di accessibilità si salta
+  try {
+    const globale = require("child_process").execSync("npm root -g").toString().trim() + "/axe-core/axe.min.js";
+    if (fs.existsSync(globale)) axePath = globale;
+  } catch (e2) { /* facoltativo */ }
+}
 
 // Grafica software: senza ?fx=full il sito sceglie da solo la versione leggera
 const GL = ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader"];

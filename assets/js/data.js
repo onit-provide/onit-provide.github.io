@@ -135,6 +135,20 @@ window.ONIT = {
      -------------------------------------------------------------------- */
   news: [
     {
+      data: "2026-11-16",
+      categoria: "nuova-sezione",
+      titolo: "Domande frequenti, nuova entrata e una Home più semplice",
+      testo: "Abbiamo riordinato il sito per farti trovare subito quello che cerchi: meno testo, una pagina con tutte le risposte e una nuova animazione d'apertura.",
+      punti: [
+        "Nuova pagina Domande: 43 risposte su piani, pagamenti, tempi, dominio, assistenza, Area clienti e privacy, con ricerca e filtri",
+        "Nuova entrata nella Home: i tasti di una tastiera si compongono attorno al logo ON.IT. Puoi premerli, far girare l'anello o cliccare il logo",
+        "Home più corta: testi più semplici e confronto tra i piani che si apre con un clic",
+        "Modulo più veloce: vedi solo i campi che servono per la tua richiesta",
+        "Animazioni a scelta: dal fondo di ogni pagina puoi ridurle o riattivarle quando vuoi",
+        "Termini e Privacy aggiornati, ciascuno con un riassunto \"In breve\""
+      ]
+    },
+    {
       data: "2026-11-09",
       categoria: "aggiornamento",
       titolo: "Un nuovo look, più dinamico",
