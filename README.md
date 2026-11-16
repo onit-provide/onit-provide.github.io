@@ -6,7 +6,8 @@ Sito statico (HTML, CSS, JavaScript) di ON.IT, senza dipendenze da installare.
 
 | File | Contenuto |
 | --- | --- |
-| `index.html` | Home: servizio, azioni rapide (acquisto / incontro / assistenza), piani, recapiti e modulo di prenotazione |
+| `index.html` | Home: animazione d'entrata con il logo 3D, servizi, metodo, piani, domande più richieste e modulo di contatto |
+| `faq.html` | Domande frequenti, con ricerca e filtro per argomento |
 | `news.html` | Bacheca con le modifiche recenti al sito, filtrabile per categoria |
 | `recensioni.html` | Recensioni dei clienti con media e filtro per piano |
 | `privacy.html` | Privacy policy e cookie policy (GDPR) |
@@ -24,8 +25,32 @@ Quasi tutto si aggiorna da **`assets/js/data.js`**:
 - **News**: aggiungi un nuovo oggetto in cima alla lista `news` a ogni modifica del sito.
 - **Recensioni**: aggiungi un oggetto a `recensioni` con `piano` uguale a `start`, `business` o `premium`.
   Finché non ci sono recensioni, la pagina mostra la schermata "Qui ci sarà la tua recensione", che sparisce da sola con la prima.
+- **Domande frequenti**: in `faq.voci` ogni domanda ha `id`, `cat` (una delle `faq.categorie`), `q` e `a`.
+  Con `home: true` compare anche nella Home. Nella risposta `{email}` e `{assistenza}` diventano gli indirizzi dei recapiti.
+  La pagina Domande e i dati per i motori di ricerca si aggiornano da soli.
 
 Header e footer sono generati da `assets/js/main.js`, lo stile è in `assets/css/style.css`.
+
+### Dopo ogni modifica a CSS o JavaScript
+
+In tutte le pagine i file sono richiamati con un numero di versione (`style.css?v=20261115`, `main.js?v=20261115`…).
+Quando cambi un file in `assets/css/` o `assets/js/`, sostituisci quel numero in tutte le pagine `.html` con la data del giorno:
+così chi ha già visitato il sito riceve subito la versione nuova.
+
+## Effetti e animazioni
+
+| File | Cosa fa |
+| --- | --- |
+| `assets/js/fx.js` | Sfondo liquido, logo a particelle, cursore, tasti 3D nei titoli; decide quanta grafica usare |
+| `assets/js/fx3d.js` | Vetrina 3D con portatile, tablet e smartphone |
+| `assets/js/fx3d-keys.js` | Animazione d'entrata: logo 3D e anello di tasti (le frasi stampate sui tasti sono in `ringSlots`) |
+| `assets/js/logo-shape.js` | Contorni del logo usati dal modello 3D |
+
+- Sui dispositivi senza scheda grafica il sito passa da solo alla **versione leggera**: niente 3D, al suo posto un disegno fermo.
+  Per forzare la versione completa durante le prove aggiungi `?fx=full` all'indirizzo.
+- Chi ha attivato "riduci movimento" nel proprio dispositivo vede il sito fermo. Lo stesso si ottiene dal link
+  **Animazioni** in fondo a ogni pagina: la scelta resta salvata nel browser.
+- L'animazione d'entrata completa si vede una volta per scheda; alle visite successive l'anello si compone subito.
 
 ## Modulo di contatto
 
@@ -97,5 +122,18 @@ quindi senza consenso il sito non contatta nessun servizio esterno.
 python3 -m http.server 8000
 # poi apri http://localhost:8000
 ```
+
+## Prove automatiche
+
+La cartella `_tests/` contiene le prove del sito. Il nome inizia con `_`, quindi GitHub Pages non la pubblica.
+
+```bash
+npm i -g playwright axe-core        # una volta sola
+node --test _tests/sito.test.js     # tutto il sito in un browser vero (circa 10 minuti)
+node --test _tests/tasti3d.test.mjs # forme 3D dell'animazione d'entrata (pochi secondi)
+```
+
+Controllano, tra l'altro: nessun errore JavaScript, nessuno scorrimento orizzontale da 320 px in su, collegamenti interni,
+accessibilità (WCAG AA), modulo di contatto, pagina Domande e animazione d'entrata.
 
 Per pubblicarlo basta caricare la cartella su un hosting statico (GitHub Pages, Netlify, Vercel…).

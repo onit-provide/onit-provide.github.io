@@ -3,43 +3,53 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>
     // Forza HTTPS (escluso l'uso in locale)
     if (location.protocol === "http:" && !/^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname)) location.replace("https:" + location.href.slice(5));
     document.documentElement.classList.add("js");
+    // Preferenza "animazioni ridotte" scelta dal visitatore nel piè di pagina
+    try { if (localStorage.getItem("onit-animazioni") === "ridotte") document.documentElement.classList.add("fx-reduce"); } catch (e) {}
   </script>
   <title>Termini e condizioni — ON.IT</title>
-  <meta name="description" content="Termini e condizioni dei servizi di realizzazione siti web di ON.IT.">
+  <meta name="description" content="Le condizioni del servizio ON.IT: preventivo, prezzi e pagamenti, tempi, garanzia, dominio e server, assistenza, recesso e area clienti.">
   <link rel="canonical" href="https://onitweb.eu/termini.html">
   <meta name="theme-color" content="#000000">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ON.IT">
   <meta property="og:locale" content="it_IT">
   <meta property="og:title" content="Termini e condizioni — ON.IT">
-  <meta property="og:description" content="Termini e condizioni dei servizi di realizzazione siti web di ON.IT.">
+  <meta property="og:description" content="Le condizioni del servizio ON.IT: preventivo, prezzi e pagamenti, tempi, garanzia, dominio e server, assistenza, recesso e area clienti.">
   <meta property="og:url" content="https://onitweb.eu/termini.html">
-  <meta property="og:image" content="https://onitweb.eu/assets/img/og-image.jpg">
+  <meta property="og:image" content="https://onitweb.eu/assets/img/og-image.jpg?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="ON.IT — Siti web su misura per la tua attività">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Termini e condizioni — ON.IT">
-  <meta name="twitter:description" content="Termini e condizioni dei servizi di realizzazione siti web di ON.IT.">
-  <meta name="twitter:image" content="https://onitweb.eu/assets/img/og-image.jpg">
+  <meta name="twitter:description" content="Le condizioni del servizio ON.IT: preventivo, prezzi e pagamenti, tempi, garanzia, dominio e server, assistenza, recesso e area clienti.">
+  <meta name="twitter:image" content="https://onitweb.eu/assets/img/og-image.jpg?v=2">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/montserrat-900-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/data.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
-  <script src="assets/js/fx.js" defer></script>
+  <link rel="stylesheet" href="assets/css/style.css?v=20261115">
+  <script src="assets/js/data.js?v=20261115" defer></script>
+  <script src="assets/js/main.js?v=20261115" defer></script>
+  <script src="assets/js/fx.js?v=20261115" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://onitweb.eu/"},{"@type":"ListItem","position":2,"name":"Termini e condizioni","item":"https://onitweb.eu/termini.html"}]}</script>
 </head>
 <body data-page="termini">
   <div data-nosnippet><a class="skip-link" href="#main">Vai al contenuto</a></div>
+  <noscript>
+    <nav class="noscript-nav" aria-label="Navigazione senza JavaScript">
+      <a href="index.html">Home</a> <a href="faq.html">Domande</a> <a href="news.html">News</a> <a href="recensioni.html">Recensioni</a> <a href="privacy.html">Privacy</a> <a href="termini.html">Termini</a>
+      <span>Per menu, modulo e area clienti attiva JavaScript. Contatti: info@onitweb.eu</span>
+    </nav>
+  </noscript>
 
   <main id="main">
     <section class="page-hero">
@@ -51,7 +61,7 @@
         </h1>
         <div class="hero-bottom">
           <p class="lead">Le condizioni che regolano l'uso di questo sito e i servizi di realizzazione di siti web offerti da ON.IT.</p>
-          <p class="lead" style="max-width:none">Ultimo aggiornamento: <strong style="color:#fff">18 ottobre 2026</strong></p>
+          <p class="lead" style="max-width:none">Ultimo aggiornamento: <strong style="color:#fff">15 novembre 2026</strong></p>
         </div>
       </div>
     </section>
@@ -66,9 +76,12 @@
             <li><a href="#preventivo">Preventivo e contratto</a></li>
             <li><a href="#prezzi">Prezzi e pagamenti</a></li>
             <li><a href="#tempi">Tempi e collaborazione</a></li>
+            <li><a href="#dominio">Dominio e server</a></li>
             <li><a href="#contenuti">Contenuti del cliente</a></li>
             <li><a href="#proprieta">Proprietà del sito</a></li>
+            <li><a href="#garanzia">Garanzia</a></li>
             <li><a href="#assistenza">Assistenza</a></li>
+            <li><a href="#area-clienti">Area clienti</a></li>
             <li><a href="#recesso">Recesso</a></li>
             <li><a href="#responsabilita">Responsabilità</a></li>
             <li><a href="#uso-sito">Uso di questo sito</a></li>
@@ -77,6 +90,15 @@
         </nav>
 
         <article class="legal">
+          <aside class="legal-brief" aria-label="In breve">
+            <h2>In breve</h2>
+            <ul>
+              <li>Il lavoro parte solo dopo che hai accettato il preventivo scritto.</li>
+              <li>Il sito si paga una volta sola: non è un abbonamento.</li>
+              <li>Garanzia di 1 anno per Start e Business, di 2 anni per Premium.</li>
+              <li>Se sei un consumatore hai 14 giorni per ripensarci.</li>
+            </ul>
+          </aside>
           <section id="fornitore">
             <h2>1. Chi siamo</h2>
             <p>I servizi sono offerti da <strong>ON.IT</strong>. Per qualsiasi comunicazione puoi scrivere a <a href="mailto:info@onitweb.eu">info@onitweb.eu</a>; per l'assistenza a <a href="mailto:help@onitweb.eu">help@onitweb.eu</a>.</p>
@@ -84,7 +106,7 @@
 
           <section id="servizi">
             <h2>2. Servizi offerti</h2>
-            <p>ON.IT progetta e realizza siti web su richiesta per attività e professionisti, secondo i piani <strong>Start</strong>, <strong>Business</strong> e <strong>Premium</strong> descritti nella <a href="index.html#piani">pagina principale</a>, e offre servizi di assistenza e aggiornamento sui siti realizzati. Le caratteristiche precise di ogni progetto sono quelle indicate nel preventivo.</p>
+            <p>ON.IT progetta e realizza siti web su misura per attività e professionisti, secondo i piani <strong>Start</strong>, <strong>Business</strong> e <strong>Premium</strong> descritti nella <a href="index.html#piani">pagina principale</a>, e offre servizi di assistenza e aggiornamento sui siti realizzati. Le caratteristiche precise di ogni progetto sono quelle indicate nel preventivo.</p>
           </section>
 
           <section id="preventivo">
@@ -99,7 +121,8 @@
 
           <section id="prezzi">
             <h2>4. Prezzi e pagamenti</h2>
-            <p>I prezzi sono quelli indicati nel preventivo accettato. Salvo accordi diversi, il pagamento avviene in due parti: un acconto all'accettazione del preventivo e il saldo alla consegna del sito, prima della pubblicazione definitiva. Per ogni pagamento viene emessa regolare fattura.</p>
+            <p>Il prezzo del sito si paga una volta sola: non è un abbonamento. I prezzi sono quelli indicati nel preventivo accettato. Salvo accordi diversi, il pagamento avviene in due parti: un acconto all'accettazione del preventivo e il saldo alla consegna del sito, prima della pubblicazione definitiva. Per ogni pagamento viene emessa regolare fattura.</p>
+            <p>Dominio e server, quando li attiva ON.IT, non sono compresi nel prezzo del sito e si pagano a parte: vedi il punto <a href="#dominio">Dominio e server</a>.</p>
           </section>
 
           <section id="tempi">
@@ -108,39 +131,62 @@
             <p>Ogni piano comprende il numero di revisioni indicato nel preventivo. Le modifiche richieste oltre questo numero, o che cambiano il progetto concordato, possono essere quotate a parte.</p>
           </section>
 
+          <section id="dominio">
+            <h2>6. Dominio e server</h2>
+            <p>Il piano <strong>Start</strong> non comprende dominio e server: restano a carico del cliente, e ON.IT collega il sito a quelli che il cliente ha scelto.</p>
+            <p>Nei piani <strong>Business</strong> e <strong>Premium</strong> ON.IT può attivare dominio e server per conto del cliente. Il loro costo non è compreso nel prezzo del sito: si paga a parte, con un canone mensile o annuale, secondo l'offerta indicata nel preventivo. Il prezzo del dominio dipende dal nome scelto: se il cliente chiede un nome preciso senza alternative, il relativo costo è a suo carico.</p>
+            <p>Nel piano Premium ON.IT si occupa anche di rinnovi, configurazione e controllo di dominio e server.</p>
+          </section>
+
           <section id="contenuti">
-            <h2>6. Contenuti forniti dal cliente</h2>
+            <h2>7. Contenuti forniti dal cliente</h2>
             <p>Il cliente garantisce di avere tutti i diritti sui testi, sulle immagini, sui loghi e sugli altri materiali che fornisce, e che il loro uso non viola diritti di terzi né la legge. Il cliente resta responsabile dei contenuti pubblicati sul proprio sito, comprese le informative legali richieste per la sua attività.</p>
           </section>
 
           <section id="proprieta">
-            <h2>7. Proprietà del sito</h2>
+            <h2>8. Proprietà del sito</h2>
             <p>Al pagamento completo del corrispettivo, il cliente acquisisce il diritto di usare liberamente il sito realizzato e i suoi contenuti grafici. Fino al saldo, il lavoro resta di proprietà di ON.IT. Restano escluse le componenti di terze parti (ad esempio caratteri tipografici, librerie o servizi esterni), che seguono le rispettive licenze. ON.IT può citare il progetto nel proprio portfolio, salvo diversa richiesta scritta del cliente.</p>
           </section>
 
+          <section id="garanzia">
+            <h2>9. Garanzia</h2>
+            <p>Ogni sito è coperto da una garanzia sul funzionamento: se non funziona come concordato nel preventivo, ON.IT interviene senza costi aggiuntivi.</p>
+            <ul>
+              <li>Piani Start e Business: <strong>1 anno</strong> dalla consegna. Per il piano Business la garanzia può essere rinnovata alla scadenza, con un pagamento a parte.</li>
+              <li>Piano Premium: <strong>2 anni</strong> dalla consegna.</li>
+            </ul>
+            <p>La garanzia non copre i malfunzionamenti dovuti a modifiche fatte da altri, a servizi di terze parti o a richieste che cambiano il progetto concordato. Restano fermi i diritti che la legge riconosce ai consumatori.</p>
+          </section>
+
           <section id="assistenza">
-            <h2>8. Assistenza</h2>
+            <h2>10. Assistenza</h2>
             <p>Le richieste di assistenza si inviano dal <a href="index.html?tipo=assistenza#prenota">modulo di contatto</a>, dall'Area clienti o via email all'indirizzo dedicato <a href="mailto:help@onitweb.eu">help@onitweb.eu</a>. Rispondiamo entro 24 ore lavorative. L'assistenza compresa nel piano e le sue condizioni sono indicate nel preventivo; gli interventi extra sono quotati a parte.</p>
           </section>
 
+          <section id="area-clienti">
+            <h2>11. Area clienti</h2>
+            <p>All'attivazione di un piano ON.IT crea per il cliente un account personale per l'<a href="accedi.html">Area clienti</a>. Le credenziali sono personali: il cliente le custodisce con cura e avvisa ON.IT se le smarrisce o sospetta un accesso non autorizzato.</p>
+            <p>Le informazioni mostrate nell'Area clienti (piani, avanzamento dei lavori, progetti completati) hanno scopo informativo: fa fede quanto indicato nel preventivo.</p>
+          </section>
+
           <section id="recesso">
-            <h2>9. Diritto di recesso</h2>
+            <h2>12. Diritto di recesso</h2>
             <p>Se il cliente è un <strong>consumatore</strong> e il contratto è concluso a distanza, può recedere entro 14 giorni dalla conclusione del contratto, senza indicarne il motivo, come previsto dal Codice del Consumo (D.Lgs. 206/2005). Se il cliente chiede espressamente di iniziare il lavoro prima della scadenza di questo termine, in caso di recesso è dovuto un importo proporzionato al lavoro già svolto. Il diritto di recesso non si applica una volta che il servizio è stato completamente eseguito.</p>
             <p>Per i clienti che agiscono per scopi professionali (attività, aziende, professionisti) le condizioni di recesso sono quelle indicate nel preventivo.</p>
           </section>
 
           <section id="responsabilita">
-            <h2>10. Limitazione di responsabilità</h2>
+            <h2>13. Limitazione di responsabilità</h2>
             <p>ON.IT si impegna a realizzare il sito con cura e secondo le buone pratiche del settore, ma non può garantire risultati specifici in termini di visite, posizionamento sui motori di ricerca o vendite. ON.IT non è responsabile per malfunzionamenti dovuti a servizi di terze parti (hosting, domini, servizi esterni) o a modifiche fatte da altri sul sito. Restano ferme le tutele inderogabili previste dalla legge, in particolare per i consumatori.</p>
           </section>
 
           <section id="uso-sito">
-            <h2>11. Uso di questo sito</h2>
-            <p>I testi, la grafica e il logo di questo sito appartengono a ON.IT e non possono essere copiati o riutilizzati senza autorizzazione. Le informazioni pubblicate hanno scopo informativo e possono essere aggiornate in qualsiasi momento. Le recensioni pubblicate riflettono l'opinione dei rispettivi autori. Il trattamento dei dati personali è descritto nella <a href="privacy.html">privacy policy</a>.</p>
+            <h2>14. Uso di questo sito</h2>
+            <p>I testi, la grafica e il logo di questo sito appartengono a ON.IT e non possono essere copiati o riutilizzati senza autorizzazione. Le informazioni pubblicate hanno scopo informativo e possono essere aggiornate in qualsiasi momento. Pubblichiamo solo recensioni di chi ha un progetto con ON.IT: prima di pubblicarle verifichiamo che l'autore sia un nostro cliente. Le recensioni riflettono l'opinione dei rispettivi autori. Il trattamento dei dati personali è descritto nella <a href="privacy.html">privacy policy</a>.</p>
           </section>
 
           <section id="legge">
-            <h2>12. Legge applicabile e foro competente</h2>
+            <h2>15. Legge applicabile e foro competente</h2>
             <p>Questi termini sono regolati dalla legge italiana. Per le controversie con clienti consumatori è competente il foro del luogo di residenza del consumatore. Per tutti gli altri casi è competente il foro del luogo in cui ON.IT ha sede.</p>
           </section>
         </article>

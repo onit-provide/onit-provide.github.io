@@ -3,58 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <script>
     // Forza HTTPS (escluso l'uso in locale)
     if (location.protocol === "http:" && !/^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname)) location.replace("https:" + location.href.slice(5));
     document.documentElement.classList.add("js");
+    // Preferenza "animazioni ridotte" scelta dal visitatore nel piè di pagina
+    try { if (localStorage.getItem("onit-animazioni") === "ridotte") document.documentElement.classList.add("fx-reduce"); } catch (e) {}
   </script>
-  <title>Recensioni — ON.IT</title>
-  <meta name="description" content="Le recensioni dei clienti ON.IT, divise per piano: Start, Business e Premium.">
+  <title>Recensioni dei clienti — ON.IT</title>
+  <meta name="description" content="Le recensioni dei clienti ON.IT, divise per piano Start, Business e Premium. Pubblichiamo solo opinioni di chi ha un progetto con noi.">
   <link rel="canonical" href="https://onitweb.eu/recensioni.html">
   <meta name="theme-color" content="#000000">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ON.IT">
   <meta property="og:locale" content="it_IT">
-  <meta property="og:title" content="Recensioni — ON.IT">
-  <meta property="og:description" content="Le recensioni dei clienti ON.IT, divise per piano: Start, Business e Premium.">
+  <meta property="og:title" content="Recensioni dei clienti — ON.IT">
+  <meta property="og:description" content="Le recensioni dei clienti ON.IT, divise per piano Start, Business e Premium. Pubblichiamo solo opinioni di chi ha un progetto con noi.">
   <meta property="og:url" content="https://onitweb.eu/recensioni.html">
-  <meta property="og:image" content="https://onitweb.eu/assets/img/og-image.jpg">
+  <meta property="og:image" content="https://onitweb.eu/assets/img/og-image.jpg?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="ON.IT — Siti web su misura per la tua attività">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Recensioni — ON.IT">
-  <meta name="twitter:description" content="Le recensioni dei clienti ON.IT, divise per piano: Start, Business e Premium.">
-  <meta name="twitter:image" content="https://onitweb.eu/assets/img/og-image.jpg">
+  <meta name="twitter:title" content="Recensioni dei clienti — ON.IT">
+  <meta name="twitter:description" content="Le recensioni dei clienti ON.IT, divise per piano Start, Business e Premium. Pubblichiamo solo opinioni di chi ha un progetto con noi.">
+  <meta name="twitter:image" content="https://onitweb.eu/assets/img/og-image.jpg?v=2">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/montserrat-900-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="assets/js/data.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
-  <script src="assets/js/fx.js" defer></script>
+  <link rel="stylesheet" href="assets/css/style.css?v=20261115">
+  <script src="assets/js/data.js?v=20261115" defer></script>
+  <script src="assets/js/main.js?v=20261115" defer></script>
+  <script src="assets/js/fx.js?v=20261115" defer></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://onitweb.eu/"},{"@type":"ListItem","position":2,"name":"Recensioni","item":"https://onitweb.eu/recensioni.html"}]}</script>
 </head>
 <body data-page="recensioni">
   <div data-nosnippet><a class="skip-link" href="#main">Vai al contenuto</a></div>
+  <noscript>
+    <nav class="noscript-nav" aria-label="Navigazione senza JavaScript">
+      <a href="index.html">Home</a> <a href="faq.html">Domande</a> <a href="news.html">News</a> <a href="recensioni.html">Recensioni</a> <a href="privacy.html">Privacy</a> <a href="termini.html">Termini</a>
+      <span>Per menu, modulo e area clienti attiva JavaScript. Contatti: info@onitweb.eu</span>
+    </nav>
+  </noscript>
 
   <main id="main">
     <section class="page-hero">
-      <div class="container">
-        <span class="eyebrow">Cosa dicono di noi</span>
-        <h1 class="display">
-          <span class="line"><span>Recen</span></span>
-          <span class="line"><span class="outline-text">sioni.</span></span>
-        </h1>
-        <div class="hero-bottom">
-          <p class="lead">Le opinioni reali dei nostri clienti, raccolte per piano scelto: Start, Business o Premium. Pubblichiamo solo recensioni di chi ha lavorato davvero con ON.IT.</p>
-          <div class="hero-actions">
-            <a class="btn btn--ghost" href="mailto:info@onitweb.eu?subject=La%20mia%20recensione%20per%20ON.IT">Lascia una recensione</a>
+      <div class="container page-hero-inner">
+        <div>
+          <span class="eyebrow">Cosa dicono di noi</span>
+          <h1 class="display">
+            <span class="line"><span>Recen</span></span>
+            <span class="line"><span class="outline-text">sioni.</span></span>
+          </h1>
+          <div class="hero-bottom">
+            <p class="lead">Opinioni di clienti reali, divise per piano. Pubblichiamo solo recensioni di chi ha un progetto con ON.IT: prima verifichiamo che l'autore sia un nostro cliente.</p>
+            <div class="hero-actions">
+              <a class="btn btn--ghost" href="mailto:info@onitweb.eu?subject=La%20mia%20recensione%20per%20ON.IT">Lascia una recensione</a>
+            </div>
           </div>
         </div>
+        <div class="keys3d" aria-hidden="true"><span class="k3d">5</span><span class="k3d">★</span></div>
       </div>
     </section>
 
