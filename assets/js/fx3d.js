@@ -1,39 +1,12 @@
 /* ==========================================================================
    ON.IT — modelli 3D interattivi (caricati solo quando servono)
-   - "blob": goccia di metallo liquido nell'intestazione della Home, con una
-     nube di particelle. Segue il puntatore, si trascina e schizza al clic.
+   - "keys": logo 3D e tasti dell'animazione d'entrata (in fx3d-keys.js).
    - "devices": portatile, tablet e smartphone con il sito che scorre sugli
      schermi. Si ruotano trascinando; un clic apre, gira o ruota il dispositivo.
    ========================================================================== */
 import * as THREE from "../vendor/three/three.module.min.js";
 
-const NOISE = `
-vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
-vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
-vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);}
-vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-.85373472095314*r;}
-float snoise(vec3 v){
-  const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
-  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
-  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
-  i=mod289(i);
-  vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-  float n_=.142857142857;vec3 ns=n_*D.wyz-D.xzx;
-  vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
-  vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x)-abs(y);
-  vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
-  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}`;
-
 const damp = (a, b, k, dt) => a + (b - a) * (1 - Math.exp(-k * dt));
-const INTERACTIVE = "a, button, input, select, textarea, label, summary, [role='button']";
 
 export function init(FX) {
   // una scena per volta, così il caricamento non blocca la pagina
@@ -41,8 +14,12 @@ export function init(FX) {
     setTimeout(() => {
       try {
         const kind = el.getAttribute("data-3d");
-        if (kind === "blob") Blob(el, FX);
-        else if (kind === "devices") Devices(el, FX);
+        if (kind === "keys") {
+          // stesso numero di versione di questo file, così i due moduli restano allineati
+          import("./fx3d-keys.js" + new URL(import.meta.url).search)
+            .then((m) => m.Keys(el, FX, { stage, damp }))
+            .catch(() => { el.classList.add("is-unsupported"); FX.keysFallback(); });
+        } else if (kind === "devices") Devices(el, FX);
       } catch (err) {
         el.classList.add("is-unsupported");
       }
@@ -75,217 +52,6 @@ function stage(el, { antialias = true, maxDpr = 2 } = {}) {
 function ndc(el, x, y) {
   const r = el.getBoundingClientRect();
   return { x: ((x - r.left) / r.width) * 2 - 1, y: -((y - r.top) / r.height) * 2 + 1, inside: x >= r.left && x <= r.right && y >= r.top && y <= r.bottom };
-}
-
-/* ------------------------------------------------------------------------
-   Goccia di metallo liquido
-   ------------------------------------------------------------------------ */
-function Blob(el, FX) {
-  const mobile = window.innerWidth < 760;
-  const st = stage(el, { antialias: true, maxDpr: 2 });
-  const { renderer } = st;
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  camera.position.set(0, 0, 6.4);
-  st.onResize = (w, h) => { camera.aspect = w / h; camera.updateProjectionMatrix(); };
-  st.onResize(st.w, st.h);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  const U = {
-    uTime: { value: 0 }, uAmp: { value: 0.15 }, uHover: { value: 0 },
-    uMouse: { value: new THREE.Vector3(0, 0, 1) }, uHitDir: { value: new THREE.Vector3(0, 0, 1) },
-    uHitAge: { value: 99 }, uEnvRot: { value: 0 }, uFlash: { value: 0 }
-  };
-
-  const blobMat = new THREE.ShaderMaterial({
-    uniforms: U,
-    vertexShader: `
-      uniform float uTime,uAmp,uHover,uHitAge;uniform vec3 uMouse,uHitDir;
-      varying vec3 vN;varying vec3 vV;
-      ${NOISE}
-      float disp(vec3 n){
-        float d=snoise(n*.95+vec3(0.,0.,uTime*.3))*uAmp;
-        d+=snoise(n*1.9-vec3(uTime*.2))*uAmp*.28;
-        d+=pow(max(dot(n,uMouse),0.),6.)*uHover*.15;
-        float ang=acos(clamp(dot(n,uHitDir),-1.,1.));
-        d+=sin(ang*9.-uHitAge*13.)*exp(-uHitAge*1.7)*exp(-ang*1.1)*.15;
-        return d;
-      }
-      void main(){
-        vec3 n=normalize(position);float R=length(position);
-        vec3 t1=normalize(cross(n,abs(n.y)<.99?vec3(0.,1.,0.):vec3(1.,0.,0.)));
-        vec3 t2=cross(n,t1);float e=.015;
-        vec3 n1=normalize(n+t1*e),n2=normalize(n+t2*e);
-        vec3 p0=n*(R+disp(n)),p1=n1*(R+disp(n1)),p2=n2*(R+disp(n2));
-        vec3 nn=normalize(cross(p1-p0,p2-p0));if(dot(nn,n)<0.)nn=-nn;
-        vec4 mv=modelViewMatrix*vec4(p0,1.);
-        vV=mv.xyz;vN=normalize(normalMatrix*nn);
-        gl_Position=projectionMatrix*mv;
-      }`,
-    fragmentShader: `
-      uniform float uEnvRot,uFlash;varying vec3 vN;varying vec3 vV;
-      float env(vec3 r){
-        float y=r.y;float a=atan(r.z,r.x);
-        float c=.015+.03*smoothstep(-.2,.8,y);
-        c+=smoothstep(.34,.37,y)*(.88+.12*smoothstep(.95,.55,y));
-        c+=smoothstep(.025,.0,abs(y-.16))*.85;
-        c+=smoothstep(.12,.08,abs(a-2.1))*smoothstep(-.32,-.28,y)*smoothstep(.3,.26,y)*.95;
-        c+=smoothstep(.09,.06,abs(a+1.1))*smoothstep(-.5,-.46,y)*smoothstep(.1,.06,y)*.7;
-        c+=smoothstep(-.18,-.15,y)*smoothstep(-.08,-.11,y)*.6;
-        c+=smoothstep(-.62,-.66,y)*.22;
-        return c;
-      }
-      void main(){
-        vec3 N=normalize(vN),V=normalize(-vV);vec3 R=reflect(-V,N);
-        float cs=cos(uEnvRot),sn=sin(uEnvRot);R=vec3(cs*R.x+sn*R.z,R.y,-sn*R.x+cs*R.z);
-        float fr=pow(1.-max(dot(N,V),0.),3.);
-        float c=env(R)*(.7+.3*fr)+pow(fr,2.)*.32+uFlash*.22;
-        c=clamp(c,0.,1.);
-        gl_FragColor=vec4(vec3(c),1.);
-      }`
-  });
-  const blob = new THREE.Mesh(new THREE.IcosahedronGeometry(1.25, mobile ? 40 : 64), blobMat);
-  group.add(blob);
-
-  // Nube di particelle attorno alla goccia
-  const N = mobile ? 900 : 2200;
-  const pos = new Float32Array(N * 3), seed = new Float32Array(N);
-  for (let i = 0; i < N; i++) {
-    const ring = Math.random() < 0.55;
-    const a = Math.random() * Math.PI * 2;
-    const r = ring ? 1.85 + Math.random() * 0.75 : 1.7 + Math.pow(Math.random(), 0.6) * 1.4;
-    const y = ring ? (Math.random() - 0.5) * 0.18 : (Math.random() * 2 - 1);
-    const rr = ring ? r : r * Math.sqrt(1 - y * y);
-    pos[i * 3] = Math.cos(a) * rr;
-    pos[i * 3 + 1] = ring ? y : y * r;
-    pos[i * 3 + 2] = Math.sin(a) * rr;
-    seed[i] = Math.random();
-  }
-  const pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  pGeo.setAttribute("aSeed", new THREE.BufferAttribute(seed, 1));
-  const PU = { uTime: U.uTime, uBurst: { value: 0 }, uPR: { value: renderer.getPixelRatio() }, uEnergy: { value: 0 } };
-  const pMat = new THREE.ShaderMaterial({
-    uniforms: PU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-    vertexShader: `
-      uniform float uTime,uBurst,uPR,uEnergy;attribute float aSeed;varying float vA;
-      void main(){
-        vec3 p=position*(1.+uBurst*(.35+aSeed*.9));
-        p.y+=sin(uTime*(.6+aSeed)+aSeed*20.)*.05;
-        vec4 mv=modelViewMatrix*vec4(p,1.);
-        gl_PointSize=(1.2+aSeed*2.4)*(1.+uEnergy*.6)*uPR*(6./-mv.z);
-        vA=.25+.55*fract(aSeed*7.13+uTime*.05*(1.+aSeed));vA*=.6+.4*sin(uTime*2.+aSeed*40.);
-        gl_Position=projectionMatrix*mv;
-      }`,
-    fragmentShader: `
-      varying float vA;
-      void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;gl_FragColor=vec4(vec3(1.),vA*(1.-d*2.)*.9);}`
-  });
-  const cloud = new THREE.Points(pGeo, pMat);
-  cloud.rotation.x = 0.35;
-  scene.add(cloud);
-
-  // Interazione
-  const ray = new THREE.Raycaster();
-  const sphere = new THREE.Sphere(new THREE.Vector3(), 1.38);
-  const hit = new THREE.Vector3();
-  let hover = 0, hoverT = 0, spin = 0, spinVel = 0, drag = null, burst = 0, tiltX = 0, tiltY = 0;
-
-  function pick(cx, cy) {
-    const p = ndc(el, cx, cy);
-    ray.setFromCamera(new THREE.Vector2(p.x, p.y), camera);
-    sphere.center.copy(group.position);
-    sphere.radius = 1.38 * group.scale.x;
-    return { p, hit: ray.ray.intersectSphere(sphere, hit) };
-  }
-  function splash(cx, cy) {
-    const r = pick(cx, cy);
-    const dir = (r.hit ? group.worldToLocal(hit.clone()) : new THREE.Vector3(r.p.x, r.p.y, 1)).normalize();
-    U.uHitDir.value.copy(dir);
-    U.uHitAge.value = 0;
-    burst = 1;
-    FX.ripple(cx, cy, 1.1);
-    FX.pulse(0.35);
-  }
-
-  window.addEventListener("pointerdown", (e) => {
-    if (FX.reduce || e.target.closest(INTERACTIVE)) return;
-    const r = pick(e.clientX, e.clientY);
-    if (!r.hit) return;
-    drag = { x: e.clientX, y: e.clientY, moved: 0, type: e.pointerType };
-    if (e.pointerType === "mouse") document.documentElement.classList.add("fx-dragging");
-  });
-  window.addEventListener("pointermove", (e) => {
-    if (!drag || drag.type !== "mouse") return;
-    const dx = e.clientX - drag.x;
-    drag.moved += Math.abs(dx) + Math.abs(e.clientY - drag.y);
-    drag.x = e.clientX; drag.y = e.clientY;
-    spinVel = dx * 0.012;
-    spin += dx * 0.012;
-  });
-  window.addEventListener("pointerup", (e) => {
-    if (!drag) return;
-    if (drag.moved < 8) splash(e.clientX, e.clientY);
-    drag = null;
-    document.documentElement.classList.remove("fx-dragging");
-  });
-  window.addEventListener("pointercancel", () => { drag = null; document.documentElement.classList.remove("fx-dragging"); });
-
-  const hero = el.closest(".hero") || el;
-  let first = true;
-  FX.addTick((t, dt) => {
-    if (st.lost || (!st.visible && !first)) return;
-    first = false;
-    const ptr = FX.pointer;
-    let nx = 0, ny = 0, over = false;
-    if (ptr.active) {
-      const r = pick(ptr.x, ptr.y);
-      nx = Math.max(-1.5, Math.min(1.5, r.p.x)); ny = Math.max(-1.5, Math.min(1.5, r.p.y));
-      over = !!r.hit;
-      if (over) U.uMouse.value.copy(group.worldToLocal(hit.clone()).normalize());
-      else U.uMouse.value.lerp(new THREE.Vector3(nx, ny, 0.8).normalize(), 0.08);
-    }
-    el.classList.toggle("is-hover", over);
-    FX.hot = over;
-    hoverT = over ? 1 : ptr.active ? Math.max(0, 0.35 - Math.hypot(nx, ny) * 0.12) : 0;
-    hover = damp(hover, hoverT, 5, dt);
-
-    if (!FX.reduce) {
-      U.uTime.value += dt * (1 + FX.energy * 0.6 + hover * 0.5);
-      if (!drag) { spinVel *= Math.pow(0.08, dt); spin += spinVel + dt * 0.12; }
-      tiltX = damp(tiltX, -ny * 0.32, 3, dt);
-      tiltY = damp(tiltY, nx * 0.45, 3, dt);
-    } else {
-      U.uTime.value = 2.0;
-    }
-    U.uHover.value = hover;
-    U.uHitAge.value += dt;
-    U.uAmp.value = 0.13 + hover * 0.04 + FX.energy * 0.03 - FX.calm * 0.05;
-    U.uEnvRot.value = spin * 0.5 + tiltY * 0.8;
-    U.uFlash.value = FX.flash;
-    burst = damp(burst, 0, 2.2, dt);
-    PU.uBurst.value = burst;
-    PU.uEnergy.value = FX.energy;
-
-    group.rotation.set(tiltX, spin + tiltY, 0);
-    cloud.rotation.y = U.uTime.value * 0.06 + spin * 0.3;
-    cloud.rotation.z = Math.sin(U.uTime.value * 0.1) * 0.08;
-
-    // Allontanandosi dall'intestazione la goccia sale e si rimpicciolisce
-    const hr = hero.getBoundingClientRect();
-    const k = Math.min(1, Math.max(0, -hr.top / Math.max(1, hr.height)));
-    group.position.y = k * 1.2;
-    cloud.position.y = group.position.y;
-    const s = 1 - k * 0.25;
-    group.scale.setScalar(s);
-    cloud.scale.setScalar(s);
-
-    renderer.render(scene, camera);
-  });
-  el.classList.add("is-ready");
-  document.documentElement.classList.add("fx-3d-hero");
 }
 
 /* ------------------------------------------------------------------------

@@ -673,26 +673,49 @@
   /* ------------------------------------------------------------------------
      5. Modelli 3D: caricati solo quando servono, per non rallentare l'apertura
      ------------------------------------------------------------------------ */
+  // Senza scheda grafica l'anello di tasti attorno al logo è un disegno fermo
+  function KeysFallback() {
+    var stage = doc.querySelector(".hero-stage");
+    if (!stage || stage.querySelector(".keys-fallback")) return;
+    var W = 830, H = 530, cx = W / 2, cy = H / 2 + 14, back = [], front = [];
+    function key(a, rx, ry, size, dark, ch) {
+      var f = Math.sin(a), s = size * (1 + f * .16), x = cx + Math.cos(a) * rx, y = cy + f * ry;
+      var g = '<g transform="translate(' + x.toFixed(1) + " " + y.toFixed(1) + ')"' + (f < 0 ? ' opacity=".6"' : "") + ">" +
+        '<rect x="' + (-s / 2).toFixed(1) + '" y="' + (-s * .3).toFixed(1) + '" width="' + s.toFixed(1) + '" height="' + (s * .86).toFixed(1) + '" rx="' + (s * .18).toFixed(1) + '" fill="' + (dark ? "#000" : "#9a9a95") + '" stroke="#fff" stroke-opacity=".3"/>' +
+        '<rect x="' + (-s * .39).toFixed(1) + '" y="' + (-s * .5).toFixed(1) + '" width="' + (s * .78).toFixed(1) + '" height="' + (s * .72).toFixed(1) + '" rx="' + (s * .15).toFixed(1) + '" fill="' + (dark ? "#161616" : "#fff") + '"/>' +
+        (ch ? '<text y="' + (s * .0).toFixed(1) + '" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="' + (s * .36).toFixed(1) + '" fill="' + (dark ? "#fff" : "#000") + '">' + ch + "</text>" : "") + "</g>";
+      (f < 0 ? back : front).push([y, g]);
+    }
+    var i, a;
+    for (i = 0; i < 20; i++) { a = i / 20 * 6.2832 + .1; key(a, 300, 150, 52, true, "ILTUOSITO·FATTOBENE·".charAt(i)); }
+    for (i = 0; i < 23; i++) { a = 1.5708 + 1.1 - i / 23 * 6.2832; key(a, 385, 205, 58, i % 6 === 5, i % 6 < 5 ? "ON.IT".charAt(i % 6) : ""); }
+    var byY = function (p, q) { return p[0] - q[0]; };
+    var box = doc.createElement("div");
+    box.className = "keys-fallback";
+    box.innerHTML = '<svg viewBox="0 0 ' + W + " " + H + '" aria-hidden="true" focusable="false">' +
+      back.sort(byY).map(function (k) { return k[1]; }).join("") +
+      '<image href="assets/img/logo-white.png" x="' + (cx - 195) + '" y="' + (cy - 82) + '" width="390" height="113"/>' +
+      front.sort(byY).map(function (k) { return k[1]; }).join("") + "</svg>";
+    stage.appendChild(box);
+  }
+  FX.keysFallback = KeysFallback;   // lo usa anche fx3d.js se la scena non parte
+
   function load3D() {
     var stages = doc.querySelectorAll("[data-3d]");
     if (!stages.length) return;
-    if (FX.lite && !reduce) {
+    function unsupported() {
       stages.forEach(function (s) { s.classList.add("is-unsupported"); });
-      return;
+      KeysFallback();
     }
+    if (FX.lite && !reduce) { unsupported(); return; }
     var test = doc.createElement("canvas");
-    if (!(test.getContext("webgl2") || test.getContext("webgl"))) {
-      stages.forEach(function (s) { s.classList.add("is-unsupported"); });
-      return;
-    }
+    if (!(test.getContext("webgl2") || test.getContext("webgl"))) { unsupported(); return; }
     var started = false;
     function go() {
       if (started) return;
       started = true;
       ["pointermove", "scroll", "touchstart", "keydown"].forEach(function (ev) { window.removeEventListener(ev, go); });
-      import("./fx3d.js" + VER).then(function (m) { m.init(FX); }).catch(function () {
-        stages.forEach(function (s) { s.classList.add("is-unsupported"); });
-      });
+      import("./fx3d.js" + VER).then(function (m) { m.init(FX); }).catch(unsupported);
     }
     // L'animazione d'entrata parte appena possibile; gli altri modelli alla prima interazione
     if (doc.querySelector('[data-3d="keys"]')) { go(); return; }
