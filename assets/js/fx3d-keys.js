@@ -393,7 +393,7 @@ export function Keys(el, FX, { stage, damp }) {
   let A = 0;                // 0 = tasti sparsi, 1 = raccolti
   let B = 0, bT = 0;        // 0 = sfera, 1 = anello
   let reopenAt = -1;        // dopo un clic sul logo: quando riaprire l'anello
-  let spinS = 0, spinR = 0, spinVel = 0, tiltDrag = 0, px = 0, py = 0, scroll = 0, logoPop = 0;
+  let spinS = 0, spinR = 0, spinVel = 0, tiltDrag = 0, px = 0, py = 0, scroll = 0, logoPop = 0, logoHover = 0;
   let hoverKey = -1, drag = null, nextType = 2.5, slow = 1 / 60, frames = 0;
   const full = FX.firstVisit && !FX.reduce;      // l'entrata completa si vede una volta per scheda
   if (FX.reduce) { A = 1; B = bT = 1; info.state = "wheel"; }
@@ -544,7 +544,7 @@ export function Keys(el, FX, { stage, damp }) {
   scatter();
   let first = true;
   FX.addTick((_, dt) => {
-    if (st.lost || (!st.visible && !first)) { if (hoverKey >= 0) clearHover(); return; }
+    if (st.lost || (!st.visible && !first)) { if (hoverKey >= 0 || FX.hot) clearHover(); return; }
     first = false;
     clock += dt;
 
@@ -573,8 +573,9 @@ export function Keys(el, FX, { stage, damp }) {
       const under = document.elementFromPoint(ptr.x, ptr.y);
       const h = under && under.closest(NOT_HERE) ? null : pick(ptr.x, ptr.y);
       hoverKey = h && h.key !== undefined ? h.key : -1;
-      FX.hot = !!h && !!h.logo;
-      html.classList.toggle("fx-key-hover", !!h && (h.key !== undefined || !!h.logo));
+      // con le animazioni ridotte il logo non si apre: niente invito al clic
+      FX.hot = !!h && !!h.logo && !FX.reduce;
+      html.classList.toggle("fx-key-hover", !!h && (h.key !== undefined || FX.hot));
     } else if (hoverKey >= 0 || FX.hot) clearHover();
 
     if (!FX.reduce) {
@@ -591,8 +592,9 @@ export function Keys(el, FX, { stage, damp }) {
 
     // logo: compare per primo, si rimpicciolisce dentro la sfera, torna grande con l'anello
     logoPop = damp(logoPop, 0, 3.2, dt);
+    logoHover = damp(logoHover, FX.hot ? 1 : 0, 9, dt);     // sotto il puntatore il logo si ingrandisce appena: si può cliccare
     const appear = FX.reduce ? 1 : ease(clamp01(clock / 0.6));
-    const s = appear * (0.84 + 0.16 * ease(B)) * (1 + Math.sin(logoPop * Math.PI) * 0.1) * (1 - scroll * 0.25);
+    const s = appear * (0.84 + 0.16 * ease(B)) * (1 + Math.sin(logoPop * Math.PI) * 0.1 + logoHover * 0.035) * (1 - scroll * 0.25);
     logo.scale.setScalar(Math.max(0.0001, s));
     logo.rotation.set(-py * 0.16, px * 0.28 + (FX.reduce ? 0 : Math.sin(clock * 0.6) * 0.07), 0);
     logo.position.y = scroll * 1.6 + (FX.reduce ? 0 : Math.sin(clock * 0.9) * 0.05);

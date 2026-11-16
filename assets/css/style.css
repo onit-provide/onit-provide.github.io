@@ -1144,7 +1144,7 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
   background: #fff; transform: scale(.4);
   transition: transform .4s var(--ease-out), border-radius .3s var(--ease-out);
 }
-.fx-cursor.is-hover span { transform: scale(1.7); }
+.fx-cursor.is-hover span, .fx-cursor.is-mid span { transform: scale(1.7); }
 .fx-cursor.is-big span { transform: scale(2.8); }
 .fx-cursor.is-text span { transform: scale(.14, .9); border-radius: 2px; }
 .fx-cursor.is-down span { transform: scale(.3); }

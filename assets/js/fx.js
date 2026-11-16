@@ -615,7 +615,8 @@
     }, { passive: true });
     FX.addTick(function () {
       if (!shown) return;
-      el.classList.toggle("is-big", big || !!FX.hot);
+      el.classList.toggle("is-big", big);
+      el.classList.toggle("is-mid", !!FX.hot);   // sopra il logo 3D: cerchio medio, per non coprirlo
       x += (FX.pointer.x - x) * .28; y += (FX.pointer.y - y) * .28;
       el.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
     });
